@@ -6,7 +6,7 @@ Examples:
 
         import editor
         q = editor.editor('/path/to/file')
-        # file is changed or overwritten
+        # file is changed or overwritten by another process
         q.quit()
         # quit() writes old version to /path/to/file.YYYY.mmdd.HHMMSS
 
@@ -125,8 +125,9 @@ class editor(object):
         This default backup routine will copy *filepath* to, for example,
         *filepath*~2015.0112.093715
         """
-        ts = time.strftime("~%Y.%m%d.%H%M%S")
-        shutil.copy2(filepath, filepath + ts)
+        ts = time.strftime(".%Y.%m%d.%H%M%S")
+        self.backup_filename = filepath + ts
+        shutil.copy2(filepath, self.backup_filename)
 
 
     # -------------------------------------------------------------------------
@@ -135,8 +136,9 @@ class editor(object):
         Read a file and return its contents as a list
         """
         f = open(filepath, 'r')
-        self.buffer = f.readlines()
+        rval = f.readlines()
         f.close()
+        return rval
 
 
     # -------------------------------------------------------------------------
