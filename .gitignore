@@ -1,4 +1,6 @@
 DODO.org
+.coverage
+tmpdir
 .#*
 .cache
 *~
