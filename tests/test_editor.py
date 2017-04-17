@@ -92,6 +92,58 @@ def test_append(tmpdir, testdata):
 
 
 # -----------------------------------------------------------------------------
+def test_backup_function(tmpdir, testdata, backup_reset):
+    """
+    q = editor.editor(..., backup=function, ...)
+    q.quit()   # verify that function runs
+    """
+    pytest.debug_func()
+    assert not hasattr(squawker, 'called')
+    q = editor.editor(testdata.filename.strpath, backup=squawker)
+    assert not hasattr(squawker, 'called')
+    q.quit()
+    assert hasattr(squawker, 'called') and squawker.called
+
+
+# -----------------------------------------------------------------------------
+def test_closed(testdata):
+    """
+    q = editor.editor()
+    q.quit()
+    q.quit()      # expect editor.Error('already closed')
+    """
+    pytest.debug_func()
+    q = editor.editor(filepath=testdata.filename.strpath)
+    q.quit()
+    with pytest.raises(editor.Error) as err:
+        q.quit()
+    assert "This file is already closed" in str(err)
+
+
+# -----------------------------------------------------------------------------
+def test_delete(testdata):
+    """
+    q = editor.editor()
+    q.delete(<expr>)
+    q.quit()      # expect matching lines to have disappeared
+    """
+    pytest.debug_func()
+    q = editor.editor(filepath=testdata.filename.strpath)
+    rmd = q.delete(' test')
+    q.quit()
+    backup = py.path.local(q.backup_filename)
+
+    assert q.closed
+    assert testdata.orig[1] in [_.strip() for _ in rmd]
+    assert testdata.orig[3] in rmd
+    assert len(rmd) == 2
+    assert backup.exists()
+    assert testdata.filename.exists()
+    assert testdata.orig[1] not in testdata.filename.read()
+    assert testdata.orig[3] not in testdata.filename.read()
+
+
+# -----------------------------------------------------------------------------
 def test_dos(tmpdir, testdata):
     """
     import editor
@@ -147,6 +199,20 @@ def test_newfile(tmpdir, justdata):
 
 
 # -----------------------------------------------------------------------------
+def test_overwrite_fail(tmpdir, testdata):
+    """
+    q = editor.editor('/path/to/file', content=['foo', 'bar'])
+    """
+    pytest.debug_func()
+    with pytest.raises(editor.Error) as err:
+        q = editor.editor(filepath=testdata.filename.strpath,
+                          content=['line 1', 'line 2'])
+    assert testdata.filename.strpath in str(err)
+    assert "To overwrite it" in str(err)
+    assert "Error" in repr(err)
+
+
+# -----------------------------------------------------------------------------
 def test_overwrite_recovery(tmpdir, testdata):
     """
     import editor
@@ -183,6 +249,25 @@ def test_overwrite_recovery(tmpdir, testdata):
 
 
 # -----------------------------------------------------------------------------
+def test_qbackup(tmpdir, testdata, backup_reset):
+    """
+    q = editor.editor('/path/to/file', backup=foobar)
+    q.quit(backup=other)
+    assert not foobar.called
+    assert other.called
+    """
+    pytest.debug_func()
+    try:
+        del squawker.called
+    except AttributeError:
+        pass
+    q = editor.editor(testdata.filename.strpath, backup=squawker)
+    q.quit(backup=altbackup)
+    assert not hasattr(squawker, 'called')
+    assert hasattr(altbackup, 'called') and altbackup.called
+
+
+# -----------------------------------------------------------------------------
 def test_substitute(tmpdir, testdata):
     """
     import editor
@@ -216,6 +301,27 @@ def test_substitute(tmpdir, testdata):
 
     # verify that the payload file contains the right stuff
     assert testdata.filename.read() == testdata.orig.replace("e", "E")
+
+
+# -----------------------------------------------------------------------------
+def test_version():
+    """
+    Check the version
+    """
+    assert editor.editor.version() != ""
+
+
+# -----------------------------------------------------------------------------
+def test_wtarget_none():
+    """
+    q = editor.editor(content=['one', 'two'])
+    q.quit()        # expect Error('No filepath specified...')
+    """
+    pytest.debug_func()
+    q = editor.editor(content=["one", "two"])
+    with pytest.raises(editor.Error) as err:
+        q.quit()
+    assert "No filepath specified" in str(err)
 
 
 # -----------------------------------------------------------------------------
