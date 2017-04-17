@@ -1,0 +1,6 @@
+coverage
+pytest-cov
+pexpect
+pip==9.0.1
+pytest==3.0.7
+flake8

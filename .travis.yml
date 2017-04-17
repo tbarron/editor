@@ -5,10 +5,7 @@ python:
  - "2.7"
 
 install:
- - "ls -al"
- - "pip install --upgrade pip"
- - "pip install --upgrade pytest"
- - "pip install pexpect"
+ - "pip install -r requirements.txt"
  - "pip install ."
 
 script:
