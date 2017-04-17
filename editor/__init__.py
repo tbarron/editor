@@ -59,6 +59,10 @@ import re
 import shutil
 import time
 
+
+from editor import version
+
+
 class editor(object):
     # -------------------------------------------------------------------------
     def __init__(self, filepath=None, content=[], backup=None, newline='\n'):
@@ -85,28 +89,28 @@ class editor(object):
         just before the new content is written to the file.
 
         File content is held as a list of lines. Line terminators from the file
-        are left in the content until we're ready to write the data out. The
-        default line terminator is '\n'. This can be overridden using the
-        *newline* argument on the constructor or on quit().
+        are removed from the content at load time. The default line terminator
+        is '\n', however, this can be overridden using the *newline* argument
+        on the constructor or on quit().
         """
         self.filepath = filepath
         self.buffer = content
         self.closed = False
         self.newline = newline
         if backup:
-            self.backup = backup
+            self.backup_func = backup
 
         if self.filepath is None:
             return
         if not os.path.exists(self.filepath):
             return
         if self.buffer:
-            raise Error("""%s exists. To overwrite it,
+            raise Error("""{} exists. To overwrite it,
                 f = editor('path')
                 f.add(...)
                 f.update(...)
                 f.quit(save=True)
-            """)
+            """.format(self.filepath))
         else:
             self.buffer = self.contents(self.filepath)
 
@@ -120,7 +124,7 @@ class editor(object):
 
 
     # -------------------------------------------------------------------------
-    def backup(self, filepath):
+    def default_backup(self, filepath):
         """
         This default backup routine will copy *filepath* to, for example,
         *filepath*~2015.0112.093715
@@ -131,12 +135,12 @@ class editor(object):
 
 
     # -------------------------------------------------------------------------
-    def contents(self, filepath):
+    def contents(self, filepath, newline=None):
         """
         Read a file and return its contents as a list
         """
         f = open(filepath, 'r')
-        rval = f.readlines()
+        rval = f.read().rstrip().split(newline or self.newline)
         f.close()
         return rval
 
@@ -182,12 +186,14 @@ class editor(object):
         elif os.path.exists(wtarget):
             if backup:
                 backup(wtarget)
+            elif hasattr(self, 'backup_func'):
+                self.backup_func(wtarget)
             else:
-                self.backup(wtarget)
+                self.default_backup(wtarget)
 
         nl = newline or self.newline
         out = open(wtarget, 'w')
-        out.writelines([l.rstrip('\r\n') + nl for l in self.buffer])
+        out.writelines([l + nl for l in self.buffer])
         out.close()
 
     # -------------------------------------------------------------------------
@@ -197,6 +203,12 @@ class editor(object):
         """
         newbuf = [re.sub(rgx, repl, line) for line in self.buffer]
         self.buffer = newbuf
+
+
+    # -------------------------------------------------------------------------
+    @classmethod
+    def version(cls):
+        return version.__version__
 
 
 # -----------------------------------------------------------------------------
