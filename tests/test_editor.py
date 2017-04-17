@@ -17,7 +17,7 @@ def test_abandon(tmpdir, testdata):
     q = editor.editor(testdata.filename.strpath)
 
     # append some data to the end of the editor buffer
-    appline = "Oops! I should not have added this line\n"
+    appline = "Oops! I should not have added this line"
     q.append(appline)
 
     # terminate the editor (should write out the file)
@@ -28,8 +28,9 @@ def test_abandon(tmpdir, testdata):
     assert not hasattr(q, "backup_filename")
     assert len(tmpdir.listdir()) == 1
 
-    # verify that the new line IS in the original file
-    assert testdata.filename.read() == testdata.orig
+    # verify that the appended line is not in the original file
+    assert written_format(testdata.orig) == testdata.filename.read()
+    assert appline not in testdata.filename.read()
 
 
 # -----------------------------------------------------------------------------
@@ -54,8 +55,8 @@ def test_another(tmpdir, testdata):
     assert other.exists()
 
     # verify that the new line IS in the original file
-    assert testdata.filename.read() == testdata.orig
-    assert other.read() == testdata.orig
+    assert written_format(testdata.orig) == testdata.filename.read()
+    assert written_format(testdata.orig) == other.read()
 
 
 # -----------------------------------------------------------------------------
@@ -72,7 +73,7 @@ def test_append(tmpdir, testdata):
     q = editor.editor(testdata.filename.strpath)
 
     # append some data to the end of the editor buffer
-    appline = "This line is not in the original test data\n"
+    appline = "This line is not in the original test data"
     q.append(appline)
 
     # terminate the editor (should write out the file)
@@ -88,7 +89,8 @@ def test_append(tmpdir, testdata):
     assert appline not in bdata
 
     # verify that the new line IS in the original file
-    assert testdata.filename.read() == testdata.orig + appline
+    exp = written_format(testdata.orig + [appline])
+    assert exp == testdata.filename.read()
 
 
 # -----------------------------------------------------------------------------
@@ -157,7 +159,7 @@ def test_dos(tmpdir, testdata):
     q = editor.editor(testdata.filename.strpath)
 
     # append some data to the end of the editor buffer
-    appline = "This line is not in the original test data\n"
+    appline = "This line is not in the original test data"
     q.append(appline)
 
     # terminate the editor (should write out the file)
@@ -169,11 +171,13 @@ def test_dos(tmpdir, testdata):
     assert testdata.filename.exists()
 
     # verify that the new line is not in the backup file
+    assert written_format(testdata.orig) in backup.read()
     assert appline not in backup.read()
 
     # verify that the new line IS in the original file
-    result = testdata.orig + appline
-    assert testdata.filename.read() == result.replace("\n", "\r\n")
+    # exp = testdata.orig.replace("\n", "\r\n") + appline + "\r\n"
+    exp = written_format(testdata.orig + [appline], newline="\r\n")
+    assert exp == testdata.filename.read()
 
 
 # -----------------------------------------------------------------------------
@@ -186,16 +190,18 @@ def test_newfile(tmpdir, justdata):
     ...
     q.quit(filepath='newfile')
     """
-    init = "First line\n"
-    last = "Last line\n"
+    pytest.debug_func()
+    init = "First line"
+    last = "Last line"
     stem = tmpdir.join("newfile")
     assert len(tmpdir.listdir()) == 0
-    q = editor.editor(content=[init])
-    for _ in justdata.orig.strip().split("\n"):
-        q.append(_ + "\n")
+    q = editor.editor(filepath=stem.strpath, content=[init])
+    for _ in justdata.orig:
+        q.append(_)
     q.append(last)
     q.quit(filepath=stem.strpath)
-    assert stem.read() == init + justdata.orig + last
+    exp = written_format([init] + justdata.orig + [last])
+    assert exp == stem.read()
 
 
 # -----------------------------------------------------------------------------
@@ -222,15 +228,15 @@ def test_overwrite_recovery(tmpdir, testdata):
     # quit() writes old version to /path/to/file.YYYY.mmdd.HHMMSS
     """
     pytest.debug_func()
-    orig_validator = testdata.orig.split('\n')[1]
-    ovwr_validator = testdata.ovwr.split('\n')[2]
+    orig_validator = testdata.orig[1]
+    ovwr_validator = testdata.ovwr[2]
 
     # pull the test file content into an editor buffer
     q = editor.editor(testdata.filename.strpath)
-    assert testdata.orig == ''.join(q.buffer)
+    assert testdata.orig == q.buffer
 
     # overwrite the test file outside the editor
-    testdata.filename.write(testdata.ovwr)
+    testdata.filename.write(written_format(testdata.ovwr))
 
     # terminate the editor (saving the original data and backing up the
     # overwrite data)
@@ -242,10 +248,10 @@ def test_overwrite_recovery(tmpdir, testdata):
     assert testdata.filename.exists()
 
     # verify that the backup file contains the right stuff
-    assert backup.read() == testdata.ovwr
+    assert written_format(testdata.ovwr) == backup.read()
 
     # verify that the payload file contains the right stuff
-    assert testdata.filename.read() == testdata.orig
+    assert written_format(testdata.orig) == testdata.filename.read()
 
 
 # -----------------------------------------------------------------------------
@@ -281,7 +287,7 @@ def test_substitute(tmpdir, testdata):
     # pull the test file content into an editor buffer
     q = editor.editor(testdata.filename.strpath)
     # assert all([_ in testdata.orig for _ in q.buffer])
-    assert ''.join(q.buffer) == testdata.orig
+    assert testdata.orig == q.buffer
 
     # make a change on every line
     # testdata.filename.write(testdata.ovwr)
@@ -297,10 +303,11 @@ def test_substitute(tmpdir, testdata):
     assert testdata.filename.exists()
 
     # verify that the backup file contains the right stuff
-    assert backup.read() == testdata.orig
+    assert written_format(testdata.orig) == backup.read()
 
     # verify that the payload file contains the right stuff
-    assert testdata.filename.read() == testdata.orig.replace("e", "E")
+    exp = written_format([_.replace("e", "E") for _ in testdata.orig])
+    assert exp == testdata.filename.read()
 
 
 # -----------------------------------------------------------------------------
