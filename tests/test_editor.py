@@ -2,7 +2,7 @@ import editor
 import pexpect
 import py
 import pytest
-import time
+
 
 # -----------------------------------------------------------------------------
 def test_flake8():
@@ -221,7 +221,7 @@ def test_overwrite_fail(tmpdir, testdata):
     """
     pytest.debug_func()
     with pytest.raises(editor.Error) as err:
-        q = editor.editor(filepath=testdata.filename.strpath,
+        q = editor.editor(filepath=testdata.filename.strpath,  # noqa: F841
                           content=['line 1', 'line 2'])
     assert testdata.filename.strpath in str(err)
     assert "To overwrite it" in str(err)
@@ -238,8 +238,6 @@ def test_overwrite_recovery(tmpdir, testdata):
     # quit() writes old version to /path/to/file.YYYY.mmdd.HHMMSS
     """
     pytest.debug_func()
-    orig_validator = testdata.orig[1]
-    ovwr_validator = testdata.ovwr[2]
 
     # pull the test file content into an editor buffer
     q = editor.editor(testdata.filename.strpath)

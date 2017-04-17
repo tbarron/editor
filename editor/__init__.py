@@ -67,14 +67,14 @@ class editor(object):
     # -------------------------------------------------------------------------
     def __init__(self, filepath=None, content=[], backup=None, newline='\n'):
         """
-        If *filepath* is None, we're creating a new file. The caller will have to
-        specify a filepath when calling quit().
+        If *filepath* is None, we're creating a new file. The caller will have
+        to specify a filepath when calling quit().
 
         If *filepath* names a file but the file does not exist, it will be
         written if quit is called with save=True.
 
-        In either of the above cases, *content* can be a list of lines to go into
-        the file.
+        In either of the above cases, *content* can be a list of lines to go
+        into the file.
 
         If *filepath* names a file that exists and *content* is empty, we
         will load the contents of the file into this object.
@@ -114,14 +114,12 @@ class editor(object):
         else:
             self.buffer = self.contents(self.filepath)
 
-
     # -------------------------------------------------------------------------
     def append(self, line):
         """
         Add *line* to the end of the file
         """
         self.buffer.append(line)
-
 
     # -------------------------------------------------------------------------
     def default_backup(self, filepath):
@@ -133,7 +131,6 @@ class editor(object):
         self.backup_filename = filepath + ts
         shutil.copy2(filepath, self.backup_filename)
 
-
     # -------------------------------------------------------------------------
     def contents(self, filepath, newline=None):
         """
@@ -144,7 +141,6 @@ class editor(object):
         f.close()
         return rval
 
-
     # -------------------------------------------------------------------------
     def delete(self, rgx):
         """
@@ -154,7 +150,6 @@ class editor(object):
         rval = [l for l in self.buffer if re.search(rgx, l)]
         self.buffer = newbuf
         return rval
-
 
     # -------------------------------------------------------------------------
     def quit(self, save=True, filepath=None, backup=None, newline=None):
@@ -204,7 +199,6 @@ class editor(object):
         newbuf = [re.sub(rgx, repl, line) for line in self.buffer]
         self.buffer = newbuf
 
-
     # -------------------------------------------------------------------------
     @classmethod
     def version(cls):
@@ -215,5 +209,6 @@ class editor(object):
 class Error(Exception):
     def __init__(self, value):
         self.value = value
+
     def __str__(self):
         return repr(self.value)

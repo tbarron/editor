@@ -39,6 +39,7 @@ def pytest_configure(config):
     if config.getoption("--all"):
         config.option.__dict__['exitfirst'] = False
 
+
 # -----------------------------------------------------------------------------
 def pytest_runtest_setup(item):
     """
@@ -61,9 +62,9 @@ def pytest_unconfigure(config):
     """
     At the end of the run, log a summary
     """
-    writelog(config,
-                  "passed: %d; FAILED: %d" % (writelog._passcount,
-                                              writelog._failcount))
+    writelog(config, "passed: %d; FAILED: %d" % (writelog._passcount,
+                                                 writelog._failcount))
+
 
 # -----------------------------------------------------------------------------
 @pytest.hookimpl(hookwrapper=True)
@@ -94,6 +95,7 @@ def pytest_runtest_makereport(item, call):
                              item.name)
     writelog(item.config, msg)
 
+
 # -----------------------------------------------------------------------------
 def writelog(config, loggable):
     """
@@ -104,7 +106,7 @@ def writelog(config, loggable):
         return
     f = open(logpath, 'a')
     msg = "%s %s\n" % (time.strftime("%Y.%m%d %H:%M:%S"),
-                     loggable)
+                       loggable)
     f.write(msg)
     f.close()
 
