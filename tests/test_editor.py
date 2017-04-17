@@ -219,19 +219,57 @@ def test_substitute(tmpdir, testdata):
 
 
 # -----------------------------------------------------------------------------
+def altbackup(filepath):
+    """
+    Fake backup function
+    """
+    altbackup.called = True
+
+
+# -----------------------------------------------------------------------------
+@pytest.fixture
+def backup_reset():
+    """
+    Let the test run, then reset the backup routines
+    """
+    yield
+    for bfunc in [altbackup, squawker]:
+        try:
+            del bfunc.called
+        except AttributeError:
+            pass
+
+
+# -----------------------------------------------------------------------------
 @pytest.fixture
 def justdata(tmpdir):
     """
     Container of the test data
     """
-    justdata.orig = ("This is a file containing\n"
-                     "several lines of test data\n"
-                     "to start us out on the\n"
-                     "overwrite test.\n")
-    justdata.ovwr = ("This is the overwriting data\n"
-                     "Once the test is done, this\n"
-                     "should no longer be present.\n")
+    justdata.orig = ["This is a file containing",
+                     "several lines of test data",
+                     "to start us out on the",
+                     "overwrite test."]
+    justdata.ovwr = ["This is the overwriting data",
+                     "Once the test is done, this",
+                     "should no longer be present."]
     return justdata
+
+
+# -----------------------------------------------------------------------------
+def squawker(filepath):
+    """
+    Fake backup function
+    """
+    squawker.called = True
+
+
+# -----------------------------------------------------------------------------
+def written_format(lines, newline="\n"):
+    """
+    Concatenate *lines* with *newline* separators as if written in a file
+    """
+    return newline.join(lines) + newline
 
 
 # -----------------------------------------------------------------------------
@@ -243,5 +281,5 @@ def testdata(tmpdir, justdata):
     testdata.orig = justdata.orig
     testdata.ovwr = justdata.ovwr
     testdata.filename = tmpdir.join("testfile")
-    testdata.filename.write(testdata.orig)
+    testdata.filename.write(written_format(testdata.orig))
     return testdata
