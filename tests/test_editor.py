@@ -1,7 +1,17 @@
 import editor
+import pexpect
 import py
 import pytest
 import time
+
+# -----------------------------------------------------------------------------
+def test_flake8():
+    """
+    Check output of flake8
+    """
+    result = pexpect.run("flake8 conftest.py editor tests")
+    assert "" == result
+
 
 # -----------------------------------------------------------------------------
 def test_abandon(tmpdir, testdata):
