@@ -9,8 +9,6 @@ def pytest_addoption(parser):
     """
     Add the --logpath option to the command line
     """
-#     parser.addoption("--keepfiles", action="store_true", default=False,
-#                      help="whether to keep or remove test outputs")
     parser.addoption("--skip", action="append", default=[],
                      help="don't run the named test(s)")
     parser.addoption("--logpath", action="store", default="",
@@ -18,7 +16,8 @@ def pytest_addoption(parser):
     parser.addoption("--dbg", action="append", default=[],
                      help="start debugger on test named or ALL")
     parser.addoption("--all", action="store_true", default=False,
-                     help="start debugger on test named or ALL")
+                     help="override --exitfirst, continue after failures")
+
 
 # -----------------------------------------------------------------------------
 def pytest_report_header(config):
@@ -27,17 +26,23 @@ def pytest_report_header(config):
     """
 
     writelog(config, "-" * 60)
-#    return("Backscratcher version %s" % __version__)
 
 
 # -----------------------------------------------------------------------------
 def pytest_configure(config):
     """
     If --all, turn off --exitfirst
+
+    Rather than setting maxfail to an arbitrarily large value, it would be
+    strategic to check the number of tests collected and set maxfail to that
+    value plus 1. To do this, I need to find out how to get the number of tests
+    collected.
     """
-    # pdb.set_trace()
     if config.getoption("--all"):
-        config.option.__dict__['exitfirst'] = False
+        if "exitfirst" in config.option.__dict__:
+            config.option.__dict__['exitfirst'] = False
+        if "maxfail" in config.option.__dict__:
+            config.option.__dict__['maxfail'] = 200
 
 
 # -----------------------------------------------------------------------------
