@@ -9,7 +9,7 @@ def test_flake8():
     """
     Check output of flake8
     """
-    result = pexpect.run("flake8 conftest.py editor tests")
+    result = pexpect.run(u"flake8 conftest.py editor tests")
     assert "" == result
 
 
