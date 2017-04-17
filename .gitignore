@@ -1,7 +1,8 @@
 DODO.org
-.coverage
 tmpdir
-.#*
+commits.txt
 .cache
+.coverage
+.#*
 *~
 *.pyc
