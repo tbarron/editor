@@ -105,7 +105,7 @@ class editor(object):
         if not os.path.exists(self.filepath):
             return
         if self.buffer:
-            raise Error("""{} exists. To overwrite it,
+            raise Error("""{0} exists. To overwrite it,
                 f = editor('path')
                 f.add(...)
                 f.update(...)
