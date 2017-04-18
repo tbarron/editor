@@ -390,7 +390,7 @@ def written_format(lines, newline="\n"):
     """
     Concatenate *lines* with *newline* separators as if written in a file
     """
-    return newline.join(lines) + newline
+    return str(newline.join(lines) + newline)
 
 
 # -----------------------------------------------------------------------------

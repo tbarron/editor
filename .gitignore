@@ -1,8 +1,10 @@
 DODO.org
 tmpdir
 commits.txt
+editor.egg-info
 .cache
 .coverage
+.tox
 .#*
 *~
 *.pyc
