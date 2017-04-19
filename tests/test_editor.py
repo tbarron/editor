@@ -188,7 +188,7 @@ def test_dos(tmpdir, testdata):
     # exp = testdata.orig.replace("\n", "\r\n") + appline + "\r\n"
     exp = bytearray(written_format(testdata.orig + [appline], newline="\r\n"),
                     'utf8')
-    actual = bytearray(testdata.filename.read_binary(), 'utf8')
+    actual = bytearray(source=testdata.filename.read_binary(), encoding='utf8')
     assert exp == actual
 
 
