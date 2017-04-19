@@ -2,6 +2,7 @@ DODO.org
 tmpdir
 commits.txt
 editor.egg-info
+venv
 .cache
 .coverage
 .tox
