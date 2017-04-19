@@ -186,9 +186,9 @@ def test_dos(tmpdir, testdata):
 
     # verify that the new line IS in the original file
     # exp = testdata.orig.replace("\n", "\r\n") + appline + "\r\n"
-    exp = written_format(testdata.orig + [appline], newline="\r\n")
-    actual = testdata.filename.read_binary()
-    assert bytes(exp) == bytes(actual)
+    exp = bytes(written_format(testdata.orig + [appline], newline="\r\n"))
+    actual = bytes(testdata.filename.read_binary())
+    assert exp == actual
 
 
 # -----------------------------------------------------------------------------
