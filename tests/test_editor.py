@@ -186,8 +186,9 @@ def test_dos(tmpdir, testdata):
 
     # verify that the new line IS in the original file
     # exp = testdata.orig.replace("\n", "\r\n") + appline + "\r\n"
-    exp = bytes(written_format(testdata.orig + [appline], newline="\r\n"))
-    actual = bytes(testdata.filename.read_binary())
+    exp = bytearray(written_format(testdata.orig + [appline], newline="\r\n"),
+                    'utf8')
+    actual = bytearray(testdata.filename.read_binary(), 'utf8')
     assert exp == actual
 
 
@@ -391,7 +392,7 @@ def written_format(lines, newline="\n"):
     """
     Concatenate *lines* with *newline* separators as if written in a file
     """
-    return str(newline.join(lines) + newline)
+    return newline.join(lines) + newline
 
 
 # -----------------------------------------------------------------------------
