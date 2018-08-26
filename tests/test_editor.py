@@ -52,9 +52,12 @@ def test_abandon(tmpdir, testdata):
 # -----------------------------------------------------------------------------
 def test_another(tmpdir, testdata):
     """
-    import editor
-    q = editor.editor('filename')
-    q.quit(filepath='other_filename')
+    Verifies that <editor>.quit() with filepath argument saves the edited
+    content to the alternate file path.
+
+        import editor
+        q = editor.editor('filename')
+        q.quit(filepath='other_filename')
     """
     pytest.debug_func()
 
@@ -78,10 +81,12 @@ def test_another(tmpdir, testdata):
 # -----------------------------------------------------------------------------
 def test_append(tmpdir, testdata):
     """
-    import editor
-    q = editor.editor('filename')
-    q.append('This is a new line')
-    q.quit(save=True)   # save=True is the default
+    Verifies that <editor>.append(data) appends *data* to the end of the file
+
+        import editor
+        q = editor.editor('filename')
+        q.append('This is a new line')
+        q.quit(save=True)   # save=True is the default
     """
     pytest.debug_func()
 
@@ -112,8 +117,11 @@ def test_append(tmpdir, testdata):
 # -----------------------------------------------------------------------------
 def test_backup_function(tmpdir, testdata, backup_reset):
     """
-    q = editor.editor(..., backup=function, ...)
-    q.quit()   # verify that function runs
+    Verifies that the backup function gets called and that we can specify an
+    alternate backup function.
+
+        q = editor.editor(..., backup=function, ...)
+        q.quit()   # verify that function runs
     """
     pytest.debug_func()
     assert not hasattr(squawker, 'called')
@@ -126,9 +134,12 @@ def test_backup_function(tmpdir, testdata, backup_reset):
 # -----------------------------------------------------------------------------
 def test_closed(testdata):
     """
-    q = editor.editor()
-    q.quit()
-    q.quit()      # expect editor.Error('already closed')
+    Verifies that a closed editor object will throw an error if we try to do
+    something with it.
+
+        q = editor.editor()
+        q.quit()
+        q.quit()      # expect editor.Error('already closed')
     """
     pytest.debug_func()
     q = editor.editor(filepath=testdata.filename.strpath)
@@ -189,9 +200,11 @@ def test_copy_on_load_fdate(tmpdir, testdata):
 # -----------------------------------------------------------------------------
 def test_delete(testdata):
     """
-    q = editor.editor()
-    q.delete(<expr>)
-    q.quit()      # expect matching lines to have disappeared
+    Verifies that <editor>.delete() removes matching lines
+
+        q = editor.editor()
+        q.delete(<expr>)
+        q.quit()      # expect matching lines to have disappeared
     """
     pytest.debug_func()
     q = editor.editor(filepath=testdata.filename.strpath)
@@ -212,10 +225,13 @@ def test_delete(testdata):
 # -----------------------------------------------------------------------------
 def test_dos(tmpdir, testdata):
     """
-    import editor
-    q = editor.editor('filename')
-    q.append('This is a new line')
-    q.quit(save=True)   # save=True is the default
+    Verifies that specifying newline='\r\n' in the .quit() call, puts CR-LF as
+    line separators in the output file.
+
+        import editor
+        q = editor.editor('filename')
+        q.append('This is a new line')
+        q.quit(newline='\r\n')
     """
     pytest.debug_func()
 
@@ -249,12 +265,15 @@ def test_dos(tmpdir, testdata):
 # -----------------------------------------------------------------------------
 def test_newfile(tmpdir, justdata):
     """
-    import editor
-    q = editor.editor(['line 1', 'line 2'])
-    q.append('This is a line')
-    q.append('Another line')
-    ...
-    q.quit(filepath='newfile')
+    Verifies that we can build the contents of a file in an editor object a
+    line at a time.
+
+        import editor
+        q = editor.editor(['line 1', 'line 2'])
+        q.append('This is a line')
+        q.append('Another line')
+        ...
+        q.quit(filepath='newfile')
     """
     pytest.debug_func()
     init = "First line"
@@ -273,7 +292,9 @@ def test_newfile(tmpdir, justdata):
 # -----------------------------------------------------------------------------
 def test_overwrite_fail(tmpdir, testdata):
     """
-    q = editor.editor('/path/to/file', content=['foo', 'bar'])
+    Verifies that specifying contents for an existing file throws an exception
+
+        q = editor.editor('/path/to/file', content=['foo', 'bar'])
     """
     pytest.debug_func()
     with pytest.raises(editor.Error) as err:
@@ -287,11 +308,15 @@ def test_overwrite_fail(tmpdir, testdata):
 # -----------------------------------------------------------------------------
 def test_overwrite_recovery(tmpdir, testdata):
     """
-    import editor
-    q = editor.editor('/path/to/file')
-    # file is changed or overwritten by another process
-    q.quit()
-    # quit() writes old version to /path/to/file.YYYY.mmdd.HHMMSS
+    Verifies that the original file winds up with a backup name
+    (YYYY.mmdd.HHMMSS added to the name) while the contents of the object
+    buffer goes into the original file name.
+
+        import editor
+        q = editor.editor('/path/to/file')
+        # file is changed or overwritten by another process
+        q.quit()
+        # quit() writes old version to /path/to/file.YYYY.mmdd.HHMMSS
     """
     pytest.debug_func()
 
@@ -321,7 +346,7 @@ def test_overwrite_recovery(tmpdir, testdata):
 # -----------------------------------------------------------------------------
 def test_qbackup(tmpdir, testdata, backup_reset):
     """
-    Verify that an alternate backup routine can be called with argument to
+    Verifies that an alternate backup routine can be called with argument to
     quit() method
 
         q = editor.editor('/path/to/file', backup=foobar)
@@ -343,11 +368,15 @@ def test_qbackup(tmpdir, testdata, backup_reset):
 # -----------------------------------------------------------------------------
 def test_substitute(tmpdir, testdata):
     """
-    import editor
-    q = editor.editor('/path/to/file')
-    # file is changed or overwritten by another process
-    q.quit()
-    # quit() writes old version to /path/to/file.YYYY.mmdd.HHMMSS
+    Verifies that with a change to every line in the editor buffer, .quit()
+    writes that edited text to the original file and the original text to the
+    backup file.
+
+        import editor
+        q = editor.editor('/path/to/file')
+        # Make a change to every line in the editor object
+        q.quit()
+        # quit() writes old version to /path/to/file.YYYY.mmdd.HHMMSS
     """
     pytest.debug_func()
 
@@ -380,7 +409,7 @@ def test_substitute(tmpdir, testdata):
 # -----------------------------------------------------------------------------
 def test_version():
     """
-    Check the version
+    Checks the version
     """
     assert editor.editor.version() != ""
 
@@ -388,8 +417,11 @@ def test_version():
 # -----------------------------------------------------------------------------
 def test_wtarget_none():
     """
-    q = editor.editor(content=['one', 'two'])
-    q.quit()        # expect Error('No filepath specified...')
+    Verifies that attempting to quit an editor object with no file name
+    established throws an exception
+
+        q = editor.editor(content=['one', 'two'])
+        q.quit()        # expect Error('No filepath specified...')
     """
     pytest.debug_func()
     q = editor.editor(content=["one", "two"])
