@@ -9,7 +9,7 @@ import pytest
 # -----------------------------------------------------------------------------
 def test_flake8():
     """
-    Check output of flake8
+    Checks output of flake8
     """
     result = pexpect.run(u"flake8 conftest.py editor tests")
     assert b"" == result
@@ -18,10 +18,14 @@ def test_flake8():
 # -----------------------------------------------------------------------------
 def test_abandon(tmpdir, testdata):
     """
-    import editor
-    q = editor.editor('filename')
-    q.sub('good stuff', 'bad stuff')   # oops!
-    q.quit(save=False)
+    Verifies that if an edit is abandoned (i.e., save=False passed to the
+    quit() method), the original content is left in the file
+
+        import editor
+        q = editor.editor('filename')
+        q.sub('good stuff', 'bad stuff')   # oops!
+        q.quit(save=False)
+        # original content left in 'filename'
     """
     pytest.debug_func()
 
@@ -48,7 +52,7 @@ def test_abandon(tmpdir, testdata):
 # -----------------------------------------------------------------------------
 def test_copy_on_load_default(tmpdir, testdata):
     """
-    Verify that when we load a file with copy_on_load unspecified, no backup
+    Verifies that when we load a file with copy_on_load unspecified, no backup
     copy is created
     """
     pytest.debug_func()
@@ -61,7 +65,7 @@ def test_copy_on_load_default(tmpdir, testdata):
 # -----------------------------------------------------------------------------
 def test_copy_on_load_fixed(tmpdir, testdata):
     """
-    Verify that when we load a file with copy_on_load specified as a simple
+    Verifies that when we load a file with copy_on_load specified as a simple
     string (not a date format), a backup copy is created with the specified
     extension appended to the file name.
     """
@@ -78,7 +82,7 @@ def test_copy_on_load_fixed(tmpdir, testdata):
 # -----------------------------------------------------------------------------
 def test_copy_on_load_fdate(tmpdir, testdata):
     """
-    Verify that when we load a file with copy_on_load specified as a data
+    Verifies that when we load a file with copy_on_load specified as a data
     formattable string (eg., '%Y.%m%d'), a backup copy is created with the
     specified strftime-processed extension appended to the file name.
     """
