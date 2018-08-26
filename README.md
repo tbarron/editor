@@ -54,3 +54,17 @@ Change line terminator to \r\n
         import editor
         q = editor.editor('unixfile')
         q.quit(save=True, filepath='dosfile', newline='\r\n')
+
+Copy on load behavior
+
+        import editor
+        q = editor.editor("existing_file")
+        assert not os.path.exists("existing_file~")
+
+        q = editor.editor("existing_file", copy_on_load="~")
+        assert os.path.exists("existing_file~")
+        assert contents("existing_file") == contents("existing_file~")
+
+        q = editor.editor("existing_file", copy_on_load=".%Y.%m%d.%H%M%S")
+        assert os.path.exists("existing_file.2018.0826.145157")
+        assert contents("existing_file") == contents("existing_file.2018.0826.145157")
