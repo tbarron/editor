@@ -3,13 +3,14 @@ Manipulate files programmatically
 
 Examples:
 
-    Age out a file in favor of a new version
+    Save a backup copy of a file at load time
 
         import editor
-        q = editor.editor('/path/to/file')
-        # file is changed or overwritten by another process
-        q.quit()
-        # quit() writes old version to /path/to/file.YYYY.mmdd.HHMMSS
+        q = editor.editor('/path/to/file', copy_on_load='.%Y.%m%d.%H%M%S')
+        # original file copied to /path/to/file.YYYY.mmdd.HHMMSS
+        # file is updated and saved
+        q.quit(save=True)
+        # original content left in /path/to/file.YYYY.mmdd.HHMMSS
 
     Add a line to the end of a file
 
