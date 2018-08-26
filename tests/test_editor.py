@@ -66,7 +66,11 @@ def test_another(tmpdir, testdata):
 
     # terminate the editor (should write out the file to a different name)
     other = tmpdir.join("another_filename")
+    q.sub("test", "fribble")
     q.quit(filepath=other.strpath)
+
+    # compute the expected edited content
+    edited = [x.replace("test", "fribble") for x in testdata.orig]
 
     # verify that both backup and original file exist
     assert not hasattr(q, "backup_filename")
@@ -75,7 +79,7 @@ def test_another(tmpdir, testdata):
 
     # verify that the new line IS in the original file
     assert written_format(testdata.orig) == testdata.filename.read()
-    assert written_format(testdata.orig) == other.read()
+    assert written_format(edited) == other.read()
 
 
 # -----------------------------------------------------------------------------
