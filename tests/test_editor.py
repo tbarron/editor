@@ -267,10 +267,13 @@ def test_overwrite_recovery(tmpdir, testdata):
 # -----------------------------------------------------------------------------
 def test_qbackup(tmpdir, testdata, backup_reset):
     """
-    q = editor.editor('/path/to/file', backup=foobar)
-    q.quit(backup=other)
-    assert not foobar.called
-    assert other.called
+    Verify that an alternate backup routine can be called with argument to
+    quit() method
+
+        q = editor.editor('/path/to/file', backup=foobar)
+        q.quit(backup=other)
+        assert not foobar.called
+        assert other.called
     """
     pytest.debug_func()
     try:

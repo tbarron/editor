@@ -1,4 +1,5 @@
-"""manipulate files
+"""
+Manipulate files programmatically
 
 Examples:
 
