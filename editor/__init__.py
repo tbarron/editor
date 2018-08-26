@@ -149,7 +149,9 @@ class editor(object):
     # -------------------------------------------------------------------------
     def contents(self, filepath, newline=None):
         """
-        Read a file and return its contents as a list
+        Read a file and return its contents as a list. The final newline (along
+        with any contiguous whitespace) is removed when we call rstrip(). This
+        may create an issue in the future.
         """
         f = open(filepath, 'r')
         rval = f.read().rstrip().split(newline or self.newline)
