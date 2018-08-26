@@ -55,6 +55,7 @@ Examples:
         q.quit(save=True, filepath='dosfile', newline='\r\n')
 
 """
+from datetime import datetime as dt
 import os
 import re
 import shutil
@@ -66,7 +67,8 @@ from editor import version
 
 class editor(object):
     # -------------------------------------------------------------------------
-    def __init__(self, filepath=None, content=[], backup=None, newline='\n'):
+    def __init__(self, filepath=None, content=[], backup=None, newline='\n',
+                 copy_on_load=None):
         """
         If *filepath* is None, we're creating a new file. The caller will have
         to specify a filepath when calling quit().
@@ -114,6 +116,8 @@ class editor(object):
             """.format(self.filepath))
         else:
             self.buffer = self.contents(self.filepath)
+            if copy_on_load:
+                self.copy_on_load(copy_on_load)
 
     # -------------------------------------------------------------------------
     def append(self, line):
@@ -121,6 +125,15 @@ class editor(object):
         Add *line* to the end of the file
         """
         self.buffer.append(line)
+
+    # -------------------------------------------------------------------------
+    def copy_on_load(self, ext):
+        """
+        Make a copy of self.filepath with ext appended to the filename
+        """
+        backname = self.filepath + dt.now().strftime(ext)
+        with open(backname, 'w') as outp:
+            outp.write(self.newline.join(self.buffer) + self.newline)
 
     # -------------------------------------------------------------------------
     def default_backup(self, filepath):
