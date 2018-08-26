@@ -402,7 +402,8 @@ def written_format(lines, newline="\n"):
 @pytest.fixture
 def testdata(tmpdir, justdata):
     """
-    Container of the test data
+    Adds newlines to the test data at appropriate spots and writes the result
+    to a file in tmpdir
     """
     testdata.orig = justdata.orig
     testdata.ovwr = justdata.ovwr
