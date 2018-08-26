@@ -46,6 +46,54 @@ def test_abandon(tmpdir, testdata):
 
 
 # -----------------------------------------------------------------------------
+def test_copy_on_load_default(tmpdir, testdata):
+    """
+    Verify that when we load a file with copy_on_load unspecified, no backup
+    copy is created
+    """
+    pytest.debug_func()
+    editor.editor(testdata.filename.strpath)
+    fl = glob.glob(tmpdir.join("*").strpath)
+    assert testdata.filename.strpath in fl
+    assert len(fl) == 1
+
+
+# -----------------------------------------------------------------------------
+def test_copy_on_load_fixed(tmpdir, testdata):
+    """
+    Verify that when we load a file with copy_on_load specified as a simple
+    string (not a date format), a backup copy is created with the specified
+    extension appended to the file name.
+    """
+    pytest.debug_func()
+    editor.editor(testdata.filename.strpath, copy_on_load='~')
+    fl = glob.glob(tmpdir.join("*").strpath)
+    assert testdata.filename.strpath in fl
+    assert len(fl) == 2
+    [other] = [x for x in fl if x != testdata.filename.strpath]
+    assert other == testdata.filename.strpath + "~"
+    assert contents(testdata.filename.strpath) == contents(other)
+
+
+# -----------------------------------------------------------------------------
+def test_copy_on_load_fdate(tmpdir, testdata):
+    """
+    Verify that when we load a file with copy_on_load specified as a data
+    formattable string (eg., '%Y.%m%d'), a backup copy is created with the
+    specified strftime-processed extension appended to the file name.
+    """
+    pytest.debug_func()
+    ext = ".%Y.%m%d.%H%M%S"
+    editor.editor(testdata.filename.strpath, copy_on_load=ext)
+    fl = glob.glob(tmpdir.join("*").strpath)
+    assert testdata.filename.strpath in fl
+    assert len(fl) == 2
+    [other] = [x for x in fl if x != testdata.filename.strpath]
+    dstr = other.replace(testdata.filename.strpath, '')
+    assert dt.strptime(dstr, ext)
+
+
+# -----------------------------------------------------------------------------
 def test_another(tmpdir, testdata):
     """
     import editor
