@@ -367,6 +367,16 @@ def backup_reset():
 
 
 # -----------------------------------------------------------------------------
+def contents(path):
+    """
+    Return the contents of *path* as a string
+    """
+    with open(path, 'r') as inp:
+        rval = inp.read()
+    return rval
+
+
+# -----------------------------------------------------------------------------
 @pytest.fixture
 def justdata(tmpdir):
     """
