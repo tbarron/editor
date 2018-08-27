@@ -11,4 +11,4 @@ extensions to the MAJOR.MINOR.PATCH format.
 
 See http://semver.org/ for more detail.
 """
-__version__ = "1.1.1"
+__version__ = "1.1.2"
