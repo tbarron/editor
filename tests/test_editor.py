@@ -411,6 +411,22 @@ def test_substitute(tmpdir, testdata):
 
 
 # -----------------------------------------------------------------------------
+def test_trailing_whitespace(tmpdir, testdata):
+    """
+    Detects the bug where trailing whitespace on the last line of the file is
+    lost because of the rstrip() in <editor>.contents()
+    """
+    pytest.debug_func()
+
+    testdata.orig[-1] += "     "
+    wws = tmpdir.join("with_whitespace")
+    wws.write(written_format(testdata.orig))
+
+    q = editor.editor(wws.strpath)
+    assert testdata.orig == q.buffer
+
+
+# -----------------------------------------------------------------------------
 def test_version():
     """
     Checks the version
