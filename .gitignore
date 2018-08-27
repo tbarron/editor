@@ -5,6 +5,7 @@ editor.egg-info
 venv
 .cache
 .coverage
+.editor-cov
 .tox
 .#*
 *~
