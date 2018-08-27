@@ -154,7 +154,7 @@ class editor(object):
         may create an issue in the future.
         """
         f = open(filepath, 'r')
-        rval = f.read().rstrip().split(newline or self.newline)
+        rval = [x.rstrip("\r\n") for x in f.readlines()]
         f.close()
         return rval
 
