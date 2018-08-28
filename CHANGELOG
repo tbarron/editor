@@ -1,0 +1,24 @@
+1.2.0  YYYY.mmdd  HH:MM:SS  (backup consolidation, BC)
+
+ - Added CHANGELOG
+
+1.1.2  2018.0827  05:31:58  (trailing whitespace, TWS)
+
+ - Verify complete test coverage
+ - Add test to catch trailing whitespace on last line
+ - Fix the trailing whitespace bug
+
+1.1.1  2018.0826  17:48:31  (test cleanup, CT)
+
+ - Alphabetize and document tests
+
+1.1.0  2018.0826  16:42:15  (copy on load, COL)
+
+ - Documentation improvements
+ - Define and implement copy_on_load behavior
+
+1.0.0  2017.0419  05:31:12  (continuous integration, CI)
+
+ - Work on README.md
+ - Set up py.test, Makefile (for clean target), test coverage, flake8 code
+   quality test, .gitignore, continuous integration with Travis
