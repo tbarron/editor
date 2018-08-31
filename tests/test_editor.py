@@ -18,7 +18,7 @@ def test_flake8():
 
 
 # -----------------------------------------------------------------------------
-def test_abandon(tmpdir, testdata):
+def test_abandon(tmpdir, td, fx_chdir):
     """
     Verifies that if an edit is abandoned (i.e., save=False passed to the
     quit() method), the original content is left in the file
@@ -52,7 +52,7 @@ def test_abandon(tmpdir, testdata):
 
 
 # -----------------------------------------------------------------------------
-def test_another(tmpdir, testdata):
+def test_another(tmpdir, td, fx_chdir):
     """
     Verifies that <editor>.quit() with filepath argument saves the edited
     content to the alternate file path.
@@ -85,7 +85,7 @@ def test_another(tmpdir, testdata):
 
 
 # -----------------------------------------------------------------------------
-def test_append(tmpdir, testdata):
+def test_append(tmpdir, td, fx_chdir):
     """
     Verifies that <editor>.append(data) appends *data* to the end of the file
 
@@ -442,7 +442,7 @@ def test_backup_function(tmpdir, td, backup_reset):
 
 
 # -----------------------------------------------------------------------------
-def test_closed(testdata):
+def test_closed(td):
     """
     Verifies that a closed editor object will throw an error if we try to do
     something with it.
@@ -460,7 +460,7 @@ def test_closed(testdata):
 
 
 # -----------------------------------------------------------------------------
-def test_delete(testdata):
+def test_delete(td):
     """
     Verifies that <editor>.delete() removes matching lines
 
@@ -485,7 +485,7 @@ def test_delete(testdata):
 
 
 # -----------------------------------------------------------------------------
-def test_dos(tmpdir, testdata):
+def test_dos(tmpdir, td):
     """
     Verifies that specifying newline='\r\n' in the .quit() call, puts CR-LF as
     line separators in the output file.
@@ -552,7 +552,7 @@ def test_newfile(tmpdir, justdata):
 
 
 # -----------------------------------------------------------------------------
-def test_overwrite_fail(tmpdir, testdata):
+def test_overwrite_fail(tmpdir, td):
     """
     Verifies that specifying contents for an existing file throws an exception
 
@@ -568,7 +568,7 @@ def test_overwrite_fail(tmpdir, testdata):
 
 
 # -----------------------------------------------------------------------------
-def test_overwrite_recovery(tmpdir, testdata):
+def test_overwrite_recovery(tmpdir, td):
     """
     Verifies that the original file winds up with a backup name
     (YYYY.mmdd.HHMMSS added to the name) while the contents of the object
@@ -606,7 +606,7 @@ def test_overwrite_recovery(tmpdir, testdata):
 
 
 # -----------------------------------------------------------------------------
-def test_qbackup(tmpdir, testdata, backup_reset):
+def test_qbackup(tmpdir, td, backup_reset):
     """
     Verifies that an alternate backup routine can be called with argument to
     quit() method
@@ -628,7 +628,7 @@ def test_qbackup(tmpdir, testdata, backup_reset):
 
 
 # -----------------------------------------------------------------------------
-def test_substitute(tmpdir, testdata):
+def test_substitute(tmpdir, td):
     """
     Verifies that with a change to every line in the editor buffer, .quit()
     writes that edited text to the original file and the original text to the
@@ -669,7 +669,7 @@ def test_substitute(tmpdir, testdata):
 
 
 # -----------------------------------------------------------------------------
-def test_trailing_whitespace(tmpdir, testdata):
+def test_trailing_whitespace(tmpdir, td):
     """
     Detects the bug where trailing whitespace on the last line of the file is
     lost because of the rstrip() in <editor>.contents()
