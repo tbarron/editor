@@ -813,18 +813,3 @@ def td(tmpdir, justdata):
     td.ymd_rgx = "^\.\d{4}\w{3}\d{2}$"
     td.dfmt = ".%Y.%m%d.%H%M%S"
     return td
-
-
-# -----------------------------------------------------------------------------
-@pytest.fixture
-def testdata(tmpdir, justdata):
-    """
-    Adds newlines to the test data at appropriate spots and writes the result
-    to a file in tmpdir
-    """
-    testdata.orig = justdata.orig
-    testdata.ovwr = justdata.ovwr
-    testdata.filename = tmpdir.join("testfile")
-    testdata.filename.write(written_format(testdata.orig))
-    testdata.basename = testdata.filename.basename
-    return testdata
