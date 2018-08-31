@@ -121,7 +121,311 @@ def test_append(tmpdir, testdata):
 
 
 # -----------------------------------------------------------------------------
-def test_backup_function(tmpdir, testdata, backup_reset):
+def test_backup_altfunc(tmpdir, td, fx_chdir):
+    """
+    Verify that backup=alt_func causes alt_func to be run for backup (at save
+    time).
+
+    [backup=alt_backup_function]
+    """
+    pytest.debug_func()
+    q = editor.editor(td.basename, backup=alt_backup)
+    q.quit()
+    fl = glob_assert("*", 2)
+    assert td.abm_name + td.dfmt in fl
+
+
+# -----------------------------------------------------------------------------
+def test_backup_altfunc_q(tmpdir, td, fx_chdir):
+    """
+    Verify that backup=alt_func passed to .quit() causes alt_func to be run for
+    backup (at save time).
+
+    [backup=alt_backup_function]
+    """
+    pytest.debug_func()
+    q = editor.editor(td.basename)
+    fl = glob_assert("*", 1)
+    q.quit(backup=alt_backup)
+    fl = glob_assert("*", 2)
+    assert td.abm_name + td.dfmt in fl
+
+
+# -----------------------------------------------------------------------------
+def test_backup_default(tmpdir, td, fx_chdir):
+    """
+    Verify that passing no values for backup yields the default backup
+    behavior.
+
+    [backup unspecified (defaults)]
+    """
+    pytest.debug_func()
+    q = editor.editor(td.basename)
+    fl = glob_assert("*", 1)
+    q.quit()
+    fl = glob_assert("*", 2)
+    assert td.basename in fl
+    [other] = [x for x in fl if x != td.basename]
+    dstr = other.replace(td.basename, '')
+    assert re.match(td.drgx, dstr)
+
+
+# -----------------------------------------------------------------------------
+def test_backup_default_strftime(tmpdir, td, fx_chdir):
+    """
+    Verify that backup=('.%Y%b%d', 'load') does the right thing
+    """
+    pytest.debug_func()
+    q = editor.editor(td.basename, backup=(td.ymd_fmt, 'load'))
+    fl = glob_assert("*", 2)
+    [other] = [x for x in fl if x != td.basename]
+    left = other.replace(td.basename, '')
+    assert re.match(td.ymd_rgx, left)
+    q.quit()
+
+
+# -----------------------------------------------------------------------------
+def test_backup_default_strftime_q(tmpdir, td, fx_chdir):
+    """
+    Verify that backup=('.%Y.%m%d.%H%M%S') behaves as expected
+    """
+    pytest.debug_func()
+    q = editor.editor(td.basename, backup=(td.dfmt, 'save'))
+    fl = glob_assert("*", 1)
+    q.quit()
+    fl = glob_assert("*", 2)
+    [other] = [x for x in fl if x != td.basename]
+    left = other.replace(td.basename, '')
+    assert re.match(td.drgx, left)
+
+
+# -----------------------------------------------------------------------------
+def test_backup_extension(tmpdir, td, fx_chdir):
+    """
+    Verify that backup='extension' works. (Can't use 'save' or 'load' as a file
+    name extension, but '.save' or '.load' should work.)
+
+    [backup='ext']
+    """
+    pytest.debug_func()
+    ext = '.fiddle'
+    q = editor.editor(td.basename, backup=ext)
+    fl = glob_assert("*", 1)
+    q.quit()
+    fl = glob_assert("*", 2)
+    assert td.basename in fl
+    [other] = [x for x in fl if x != td.basename]
+    left = other.replace(td.basename, '')
+    assert left == ext
+
+
+# -----------------------------------------------------------------------------
+def test_backup_extension_q(tmpdir, td, fx_chdir):
+    """
+    Verify that backup='extension' works when passed to .quit(). (Can't use
+    'save' or 'load' as a file name extension, but '.save' or '.load' should
+    work.)
+
+    [backup='ext']
+    """
+    pytest.debug_func()
+    ext = '.fiddle'
+    q = editor.editor(td.basename)
+    fl = glob_assert("*", 1)
+    q.quit(backup=ext)
+    fl = glob_assert("*", 2)
+    assert td.basename in fl
+
+    [other] = [x for x in fl if x != td.basename]
+    left = other.replace(td.basename, '')
+    assert left == ext
+
+
+# -----------------------------------------------------------------------------
+def test_backup_func_ext(tmpdir, td, fx_chdir):
+    """
+    Verify that backup=('ext', function) calls function('ext') at save time.
+
+    [backup=('ext', function)]
+    """
+    pytest.debug_func()
+    ext = ".wumpus"
+    q = editor.editor(td.basename, backup=(ext, alt_backup))
+    fl = glob_assert("*", 1)
+    q.quit()
+    fl = glob_assert("*", 2)
+    assert td.abm_name + ext in fl
+
+
+# -----------------------------------------------------------------------------
+def test_backup_func_ymd(tmpdir, td, fx_chdir):
+    """
+    Verify that backup=(function, '%Y%b%d') calls function('%Y%b%d') at save
+    time.
+
+    [backup=(function, '%Y%b%d')]
+    """
+    pytest.debug_func()
+    ext = td.ymd_fmt
+    q = editor.editor(td.basename, backup=(alt_backup, ext))
+    fl = glob_assert("*", 1)
+    q.quit()
+    fl = glob_assert("*", 2)
+    assert td.abm_name + td.ymd_fmt in fl
+
+
+# -----------------------------------------------------------------------------
+def test_backup_func_ymd_load(tmpdir, td, fx_chdir):
+    """
+    Verify that backup=(function, '%b%y%H', 'load') calls function('%b%y%H') at
+    load time.
+
+    [backup=(function, '%b%y%H', 'load')]
+    """
+    pytest.debug_func()
+    q = editor.editor(td.basename, backup=(alt_backup, td.ymd_fmt, 'load'))
+    fl = glob_assert("*", 2)
+    assert td.abm_name + td.ymd_fmt in fl
+    q.quit()
+    fl = glob_assert("*", 2)
+
+
+# -----------------------------------------------------------------------------
+def test_backup_func_ymd_save(tmpdir, td, fx_chdir):
+    """
+    Verify that backup=(function, '%b%y%H', 'save') calls function('%b%y%H') at
+    save time.
+
+    [backup=(function, '%b%y%H', 'save')]
+    """
+    pytest.debug_func()
+    q = editor.editor(td.basename, backup=(alt_backup, td.ymd_fmt, 'save'))
+    fl = glob_assert("*", 1)
+    q.quit()
+    fl = glob_assert("*", 2)
+    assert td.abm_name + td.ymd_fmt in fl
+
+
+# -----------------------------------------------------------------------------
+def test_backup_load(tmpdir, td, fx_chdir):
+    """
+    Verify that backup='load' makes the backup happen at load time.
+
+    [backup='load']
+    """
+    pytest.debug_func()
+    q = editor.editor(td.basename, backup='load')
+    fl = glob_assert("*", 2)
+    [other] = [x for x in fl if x != td.basename]
+    left = other.replace(td.basename, '')
+    assert re.match(td.drgx, left)
+    q.quit()
+    fl = glob_assert("*", 2)
+    assert td.basename in fl
+
+
+# -----------------------------------------------------------------------------
+def test_backup_load_ext(tmpdir, td, fx_chdir):
+    """
+    Verify that backup=('load', '.ext') makes the backup happen at load time
+    and uses the specified extension.
+
+    [backup=('load', 'ext')]
+    """
+    pytest.debug_func()
+    ext = ".frooble"
+    q = editor.editor(td.basename, backup=('load', ext))
+    fl = glob_assert("*", 2)
+    assert td.basename in fl
+    assert "{}{}".format(td.basename, ext) in fl
+    q.quit()
+    fl = glob_assert("*", 2)
+
+
+# -----------------------------------------------------------------------------
+def test_backup_load_func(tmpdir, td, fx_chdir):
+    """
+    Verify that backup=(function, 'load') runs function at load time.
+
+    [backup=(function, 'load')]
+    """
+    pytest.debug_func()
+    q = editor.editor(td.basename, backup=(alt_backup, 'load'))
+    fl = glob_assert("*", 2)
+    assert "{}{}".format(td.abm_name, td.dfmt) in fl
+    q.quit()
+    fl = glob_assert("*", 2)
+
+
+# -----------------------------------------------------------------------------
+def test_backup_save(tmpdir, td, fx_chdir):
+    """
+    Verify that backup='save' delays the backup time to when .quit() is called.
+
+    [backup='save']
+    """
+    pytest.debug_func()
+    q = editor.editor(td.basename, backup='save')
+    fl = glob_assert("*", 1)
+    q.quit()
+    fl = glob_assert("*", 2)
+    assert td.basename in fl
+    [other] = [x for x in fl if x != td.basename]
+    left = other.replace(td.basename, '')
+    assert re.match(td.drgx, left)
+
+
+# -----------------------------------------------------------------------------
+def test_backup_save_ext(tmpdir, td, fx_chdir):
+    """
+    Verify that backup=('.ext', 'save') makes the backup at save time with .ext
+    as the extension on the backup file.
+
+    [backup=('.ext', 'save')]
+    """
+    pytest.debug_func()
+    ext = ".backup"
+    q = editor.editor(td.basename, backup=('save', ext))
+    fl = glob_assert("*", 1)
+    assert td.basename in fl
+    q.quit()
+    fl = glob_assert("*", 2)
+    assert "{}{}".format(td.basename, ext) in fl
+
+
+# -----------------------------------------------------------------------------
+def test_backup_save_func(tmpdir, td, fx_chdir):
+    """
+    Verify that backup=('save', function) runs function at save time.
+
+    [backup=('save', function)]
+    """
+    pytest.debug_func()
+    q = editor.editor(td.basename, backup=('save', alt_backup))
+    fl = glob_assert("*", 1)
+    q.quit()
+    fl = glob_assert("*", 2)
+    assert "alt_backup_marker{}".format(td.dfmt) in fl
+
+
+# -----------------------------------------------------------------------------
+def test_backup_save_func_q(tmpdir, td, fx_chdir):
+    """
+    Verify that backup=('save', function) passed to .quit() runs function at
+    save time.
+
+    [backup=('save', function)]
+    """
+    pytest.debug_func()
+    q = editor.editor(td.basename)
+    fl = glob_assert("*", 1)
+    q.quit(backup=('save', alt_backup))
+    fl = glob_assert("*", 2)
+    assert "alt_backup_marker{}".format(td.dfmt) in fl
+
+
+# -----------------------------------------------------------------------------
+def test_backup_function(tmpdir, td, backup_reset):
     """
     Verifies that the backup function gets called and that we can specify an
     alternate backup function.
@@ -131,7 +435,7 @@ def test_backup_function(tmpdir, testdata, backup_reset):
     """
     pytest.debug_func()
     assert not hasattr(squawker, 'called')
-    q = editor.editor(testdata.filename.strpath, backup=squawker)
+    q = editor.editor(td.filename.strpath, backup=squawker)
     assert not hasattr(squawker, 'called')
     q.quit()
     assert hasattr(squawker, 'called') and squawker.called
