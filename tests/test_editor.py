@@ -10,7 +10,7 @@ import tbx
 # -----------------------------------------------------------------------------
 def test_flake8(K):
     """
-    Checks output of flake8
+    Checks output of flake8 on payload and test code
     """
     result = pexpect.run(K["flake_cmd"])
     assert "" == result.decode()
