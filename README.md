@@ -65,6 +65,9 @@ save, both triggers will fire and backup the file twice.
 * When q.quit() is called, argument save has a default value of True. If
   'save=False' is specified, no backup routine will be called at quit time.
 
+* If the editor .__init__() is called with backup='save' and .quit() is
+  called with backup='load', no backup will be made. This is equivalent to
+  save=False in the .quit() argument list.
 
 #### Add a line to the end of a file
 
