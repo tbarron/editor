@@ -8,16 +8,16 @@ import tbx
 
 
 # -----------------------------------------------------------------------------
-def test_flake8():
+def test_flake8(K):
     """
     Checks output of flake8
     """
-    result = pexpect.run(u"flake8 conftest.py editor tests")
     assert b"" == result
+    result = pexpect.run(K["flake_cmd"])
 
 
 # -----------------------------------------------------------------------------
-def test_abandon(tmpdir, td, fx_chdir):
+def test_abandon(tmpdir, td, fx_chdir, K):
     """
     Verifies that if an edit is abandoned (i.e., save=False passed to the
     quit() method), the original content is left in the file and no backup is
@@ -35,10 +35,9 @@ def test_abandon(tmpdir, td, fx_chdir):
     q = editor.editor(td.basename)
 
     # append some data to the end of the editor buffer
-    appline = "Oops! I should not have added this line"
-    q.append(appline)
 
     # terminate the editor (should write out the file)
+    q.append(K["oops"])
     q.quit(save=False)
 
     # verify that original file exists but backup file does not
@@ -49,11 +48,11 @@ def test_abandon(tmpdir, td, fx_chdir):
     # verify that the appended line is not in the original file
     content = td.filename.read()
     assert written_format(td.orig) == content
-    assert appline not in content
+    assert K["oops"] not in content
 
 
 # -----------------------------------------------------------------------------
-def test_another(tmpdir, td, fx_chdir):
+def test_another(tmpdir, td, fx_chdir, K):
     """
     Verifies that <editor>.quit() with filepath argument saves the edited
     content to the alternate file path.
@@ -68,14 +67,15 @@ def test_another(tmpdir, td, fx_chdir):
     q = editor.editor(td.basename)
 
     # terminate the editor (should write out the file to a different name)
-    other = tmpdir.join("another_filename")
-    q.sub("test", "fribble")
+    other = tmpdir.join(K["altfile"])
+    q.sub(K["test"], K["frib"])
     q.quit(filepath=other.strpath)
 
     # compute the expected edited content
     edited = [x.replace("test", "fribble") for x in td.orig]
 
     # verify that both backup and original file exist
+    edited = [x.replace(K["test"], K["frib"]) for x in td.orig]
     assert q.backup_filename() is None
     assert td.filename.exists()
     assert other.exists()
@@ -87,6 +87,7 @@ def test_another(tmpdir, td, fx_chdir):
 
 # -----------------------------------------------------------------------------
 def test_append(tmpdir, td, fx_chdir):
+def test_append(tmpdir, td, fx_chdir, K):
     """
     Verifies that <editor>.append(data) appends *data* to the end of the file
 
@@ -101,10 +102,9 @@ def test_append(tmpdir, td, fx_chdir):
     q = editor.editor(td.basename)
 
     # append some data to the end of the editor buffer
-    appline = "This line is not in the original test data"
-    q.append(appline)
 
     # terminate the editor (should write out the file)
+    q.append(K["new"])
     q.quit()
 
     # verify that both backup and original file exist
@@ -114,10 +114,10 @@ def test_append(tmpdir, td, fx_chdir):
 
     # verify that the new line is not in the backup file
     bdata = backup.read()
-    assert appline not in bdata
 
     # verify that the new line IS in the original file
-    exp = written_format(td.orig + [appline])
+    assert K["new"] not in bdata
+    exp = written_format(td.orig + [K["new"]])
     assert exp == td.filename.read()
 
 
@@ -172,12 +172,12 @@ def test_backup_default(tmpdir, td, fx_chdir):
 
 
 # -----------------------------------------------------------------------------
-def test_backup_default_strftime(tmpdir, td, fx_chdir):
+def test_backup_default_strftime(tmpdir, td, fx_chdir, K):
     """
     Verify that backup=('.%Y%b%d', 'load') does the right thing
     """
     pytest.debug_func()
-    q = editor.editor(td.basename, backup=(td.ymd_fmt, 'load'))
+    q = editor.editor(td.basename, backup=(K["ymdf"], 'load'))
     fl = glob_assert("*", 2)
     [other] = [x for x in fl if x != td.basename]
     left = other.replace(td.basename, '')
@@ -201,7 +201,7 @@ def test_backup_default_strftime_q(tmpdir, td, fx_chdir):
 
 
 # -----------------------------------------------------------------------------
-def test_backup_extension(tmpdir, td, fx_chdir):
+def test_backup_extension(tmpdir, td, fx_chdir, K):
     """
     Verify that backup='extension' works. (Can't use 'save' or 'load' as a file
     name extension, but '.save' or '.load' should work.)
@@ -209,15 +209,14 @@ def test_backup_extension(tmpdir, td, fx_chdir):
     [backup='ext']
     """
     pytest.debug_func()
-    ext = '.fiddle'
-    q = editor.editor(td.basename, backup=ext)
+    q = editor.editor(td.basename, backup=K["dfid"])
     fl = glob_assert("*", 1)
     q.quit()
     fl = glob_assert("*", 2)
     assert td.basename in fl
     [other] = [x for x in fl if x != td.basename]
     left = other.replace(td.basename, '')
-    assert left == ext
+    assert left == K["dfid"]
 
 
 # -----------------------------------------------------------------------------
@@ -243,23 +242,22 @@ def test_backup_extension_q(tmpdir, td, fx_chdir):
 
 
 # -----------------------------------------------------------------------------
-def test_backup_func_ext(tmpdir, td, fx_chdir):
+def test_backup_func_ext(tmpdir, td, fx_chdir, K):
     """
     Verify that backup=('ext', function) calls function('ext') at save time.
 
     [backup=('ext', function)]
     """
     pytest.debug_func()
-    ext = ".wumpus"
-    q = editor.editor(td.basename, backup=(ext, alt_backup))
+    q = editor.editor(td.basename, backup=(K["wump"], alt_backup))
     fl = glob_assert("*", 1)
     q.quit()
     fl = glob_assert("*", 2)
-    assert td.abm_name + ext in fl
+    assert td.abm_name + K["wump"] in fl
 
 
 # -----------------------------------------------------------------------------
-def test_backup_func_ymd(tmpdir, td, fx_chdir):
+def test_backup_func_ymd(tmpdir, td, fx_chdir, K):
     """
     Verify that backup=(function, '%Y%b%d') calls function('%Y%b%d') at save
     time.
@@ -267,16 +265,15 @@ def test_backup_func_ymd(tmpdir, td, fx_chdir):
     [backup=(function, '%Y%b%d')]
     """
     pytest.debug_func()
-    ext = td.ymd_fmt
-    q = editor.editor(td.basename, backup=(alt_backup, ext))
+    q = editor.editor(td.basename, backup=(alt_backup, K["ymdf"]))
     fl = glob_assert("*", 1)
     q.quit()
     fl = glob_assert("*", 2)
-    assert td.abm_name + td.ymd_fmt in fl
+    assert td.abm_name + K["ymdf"] in fl
 
 
 # -----------------------------------------------------------------------------
-def test_backup_func_ymd_load(tmpdir, td, fx_chdir):
+def test_backup_func_ymd_load(tmpdir, td, fx_chdir, K):
     """
     Verify that backup=(function, '%b%y%H', 'load') calls function('%b%y%H') at
     load time.
@@ -284,15 +281,15 @@ def test_backup_func_ymd_load(tmpdir, td, fx_chdir):
     [backup=(function, '%b%y%H', 'load')]
     """
     pytest.debug_func()
-    q = editor.editor(td.basename, backup=(alt_backup, td.ymd_fmt, 'load'))
+    q = editor.editor(td.basename, backup=(alt_backup, K["ymdf"], 'load'))
     fl = glob_assert("*", 2)
-    assert td.abm_name + td.ymd_fmt in fl
+    assert td.abm_name + K["ymdf"] in fl
     q.quit()
     fl = glob_assert("*", 2)
 
 
 # -----------------------------------------------------------------------------
-def test_backup_func_ymd_save(tmpdir, td, fx_chdir):
+def test_backup_func_ymd_save(tmpdir, td, fx_chdir, K):
     """
     Verify that backup=(function, '%b%y%H', 'save') calls function('%b%y%H') at
     save time.
@@ -300,7 +297,7 @@ def test_backup_func_ymd_save(tmpdir, td, fx_chdir):
     [backup=(function, '%b%y%H', 'save')]
     """
     pytest.debug_func()
-    q = editor.editor(td.basename, backup=(alt_backup, td.ymd_fmt, 'save'))
+    q = editor.editor(td.basename, backup=(alt_backup, K["ymdf"], 'save'))
     fl = glob_assert("*", 1)
     q.quit()
     fl = glob_assert("*", 2)
@@ -326,7 +323,7 @@ def test_backup_load(tmpdir, td, fx_chdir):
 
 
 # -----------------------------------------------------------------------------
-def test_backup_load_ext(tmpdir, td, fx_chdir):
+def test_backup_load_ext(tmpdir, td, fx_chdir, K):
     """
     Verify that backup=('load', '.ext') makes the backup happen at load time
     and uses the specified extension.
@@ -334,11 +331,10 @@ def test_backup_load_ext(tmpdir, td, fx_chdir):
     [backup=('load', 'ext')]
     """
     pytest.debug_func()
-    ext = ".frooble"
-    q = editor.editor(td.basename, backup=('load', ext))
+    q = editor.editor(td.basename, backup=('load', K["froo"]))
     fl = glob_assert("*", 2)
     assert td.basename in fl
-    assert "{}{}".format(td.basename, ext) in fl
+    assert "{}{}".format(td.basename, K["froo"]) in fl
     q.quit()
     fl = glob_assert("*", 2)
 
