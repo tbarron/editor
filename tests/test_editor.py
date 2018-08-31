@@ -774,6 +774,24 @@ def backup_reset():
 
 
 # -----------------------------------------------------------------------------
+@pytest.fixture
+def K():
+    """
+    Constants for tests
+    """
+    rval = {
+        'altfile': "another_filename",
+        'dfid': ".fiddle",
+        'flake_cmd': "flake8 conftest.py editor tests",
+        'frib': "fribble",
+        'froo': ".frooble",
+        'new': "This line is not in the original test data",
+        'oops': "Oops! I should not have added this line",
+        'test': "test",
+        'wump': ".wumpus",
+        'ymdf': ".%Y%b%d",
+        }
+
     return rval
 
 
