@@ -127,6 +127,16 @@ class editor(object):
         self.buffer.append(line)
 
     # -------------------------------------------------------------------------
+    def backup_filename(self):
+        """
+        Return the backup filename if one has been set, otherwise None
+        """
+        if hasattr(self, "_backup_filename"):
+            return self._backup_filename
+        else:
+            return None
+
+    # -------------------------------------------------------------------------
     def backup_setup(self, backup):
         """
         *backup* may be 'load', 'save', extension string, a function pointer,
@@ -161,8 +171,8 @@ class editor(object):
         *filepath*~2015.0112.093715
         """
         ts = dt.now().strftime(ext)
-        self.backup_filename = self.backup['filepath'] + ts
-        shutil.copy2(self.backup['filepath'], self.backup_filename)
+        self._backup_filename = self.backup['filepath'] + ts
+        shutil.copy2(self.backup['filepath'], self._backup_filename)
 
     # -------------------------------------------------------------------------
     def contents(self, filepath, newline=None):
