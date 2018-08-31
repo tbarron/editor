@@ -31,7 +31,7 @@ def test_abandon(tmpdir, td, fx_chdir):
     pytest.debug_func()
 
     # load the test data into an editor object
-    q = editor.editor(testdata.filename.strpath)
+    q = editor.editor(td.basename)
 
     # append some data to the end of the editor buffer
     appline = "Oops! I should not have added this line"
@@ -41,13 +41,14 @@ def test_abandon(tmpdir, td, fx_chdir):
     q.quit(save=False)
 
     # verify that original file exists but backup file does not
-    assert testdata.filename.exists()
+    assert td.filename.exists()
     assert not hasattr(q, "backup_filename")
     assert len(tmpdir.listdir()) == 1
 
     # verify that the appended line is not in the original file
-    assert written_format(testdata.orig) == testdata.filename.read()
-    assert appline not in testdata.filename.read()
+    content = td.filename.read()
+    assert written_format(td.orig) == content
+    assert appline not in content
 
 
 # -----------------------------------------------------------------------------
@@ -63,7 +64,7 @@ def test_another(tmpdir, td, fx_chdir):
     pytest.debug_func()
 
     # load the test data into an editor object
-    q = editor.editor(testdata.filename.strpath)
+    q = editor.editor(td.basename)
 
     # terminate the editor (should write out the file to a different name)
     other = tmpdir.join("another_filename")
@@ -71,15 +72,15 @@ def test_another(tmpdir, td, fx_chdir):
     q.quit(filepath=other.strpath)
 
     # compute the expected edited content
-    edited = [x.replace("test", "fribble") for x in testdata.orig]
+    edited = [x.replace("test", "fribble") for x in td.orig]
 
     # verify that both backup and original file exist
     assert not hasattr(q, "backup_filename")
-    assert testdata.filename.exists()
+    assert td.filename.exists()
     assert other.exists()
 
     # verify that the new line IS in the original file
-    assert written_format(testdata.orig) == testdata.filename.read()
+    assert written_format(td.orig) == td.filename.read()
     assert written_format(edited) == other.read()
 
 
@@ -96,7 +97,7 @@ def test_append(tmpdir, td, fx_chdir):
     pytest.debug_func()
 
     # load the test data into an editor object
-    q = editor.editor(testdata.filename.strpath)
+    q = editor.editor(td.basename)
 
     # append some data to the end of the editor buffer
     appline = "This line is not in the original test data"
@@ -108,15 +109,15 @@ def test_append(tmpdir, td, fx_chdir):
     # verify that both backup and original file exist
     backup = py.path.local(q.backup_filename)
     assert backup.exists()
-    assert testdata.filename.exists()
+    assert td.filename.exists()
 
     # verify that the new line is not in the backup file
     bdata = backup.read()
     assert appline not in bdata
 
     # verify that the new line IS in the original file
-    exp = written_format(testdata.orig + [appline])
-    assert exp == testdata.filename.read()
+    exp = written_format(td.orig + [appline])
+    assert exp == td.filename.read()
 
 
 # -----------------------------------------------------------------------------
@@ -451,7 +452,7 @@ def test_closed(td):
         q.quit()      # expect editor.Error('already closed')
     """
     pytest.debug_func()
-    q = editor.editor(filepath=testdata.filename.strpath)
+    q = editor.editor(filepath=td.filename.strpath)
     q.quit()
     with pytest.raises(editor.Error) as err:
         q.quit()
@@ -468,19 +469,19 @@ def test_delete(td):
         q.quit()      # expect matching lines to have disappeared
     """
     pytest.debug_func()
-    q = editor.editor(filepath=testdata.filename.strpath)
+    q = editor.editor(filepath=td.filename.strpath)
     rmd = q.delete(' test')
     q.quit()
     backup = py.path.local(q.backup_filename)
 
     assert q.closed
-    assert testdata.orig[1] in [_.strip() for _ in rmd]
-    assert testdata.orig[3] in rmd
+    assert td.orig[1] in [_.strip() for _ in rmd]
+    assert td.orig[3] in rmd
     assert len(rmd) == 2
     assert backup.exists()
-    assert testdata.filename.exists()
-    assert testdata.orig[1] not in testdata.filename.read()
-    assert testdata.orig[3] not in testdata.filename.read()
+    assert td.filename.exists()
+    assert td.orig[1] not in td.filename.read()
+    assert td.orig[3] not in td.filename.read()
 
 
 # -----------------------------------------------------------------------------
@@ -497,7 +498,7 @@ def test_dos(tmpdir, td):
     pytest.debug_func()
 
     # load the test data into an editor object
-    q = editor.editor(testdata.filename.strpath)
+    q = editor.editor(td.filename.strpath)
 
     # append some data to the end of the editor buffer
     appline = "This line is not in the original test data"
@@ -509,17 +510,17 @@ def test_dos(tmpdir, td):
     # verify that both backup and original file exist
     backup = py.path.local(q.backup_filename)
     assert backup.exists()
-    assert testdata.filename.exists()
+    assert td.filename.exists()
 
     # verify that the new line is not in the backup file
-    assert written_format(testdata.orig) in backup.read()
+    assert written_format(td.orig) in backup.read()
     assert appline not in backup.read()
 
     # verify that the new line IS in the original file
     # exp = testdata.orig.replace("\n", "\r\n") + appline + "\r\n"
-    exp = bytearray(written_format(testdata.orig + [appline], newline="\r\n"),
+    exp = bytearray(written_format(td.orig + [appline], newline="\r\n"),
                     'utf8')
-    actual = testdata.filename.read_binary()
+    actual = td.filename.read_binary()
     assert exp == actual
 
 
@@ -559,9 +560,9 @@ def test_overwrite_fail(tmpdir, td):
     """
     pytest.debug_func()
     with pytest.raises(editor.Error) as err:
-        q = editor.editor(filepath=testdata.filename.strpath,  # noqa: F841
+        q = editor.editor(filepath=td.filename.strpath,  # noqa: F841
                           content=['line 1', 'line 2'])
-    assert testdata.filename.strpath in str(err)
+    assert td.filename.strpath in str(err)
     assert "To overwrite it" in str(err)
     assert "Error" in repr(err)
 
@@ -582,11 +583,11 @@ def test_overwrite_recovery(tmpdir, td):
     pytest.debug_func()
 
     # pull the test file content into an editor buffer
-    q = editor.editor(testdata.filename.strpath)
-    assert testdata.orig == q.buffer
+    q = editor.editor(td.filename.strpath)
+    assert td.orig == q.buffer
 
     # overwrite the test file outside the editor
-    testdata.filename.write(written_format(testdata.ovwr))
+    td.filename.write(written_format(td.ovwr))
 
     # terminate the editor (saving the original data and backing up the
     # overwrite data)
@@ -595,13 +596,13 @@ def test_overwrite_recovery(tmpdir, td):
     # verify that the backup and original files exist
     backup = py.path.local(q.backup_filename)
     assert backup.exists()
-    assert testdata.filename.exists()
+    assert td.filename.exists()
 
     # verify that the backup file contains the right stuff
-    assert written_format(testdata.ovwr) == backup.read()
+    assert written_format(td.ovwr) == backup.read()
 
     # verify that the payload file contains the right stuff
-    assert written_format(testdata.orig) == testdata.filename.read()
+    assert written_format(td.orig) == td.filename.read()
 
 
 # -----------------------------------------------------------------------------
@@ -620,7 +621,7 @@ def test_qbackup(tmpdir, td, backup_reset):
         del squawker.called
     except AttributeError:
         pass
-    q = editor.editor(testdata.filename.strpath, backup=squawker)
+    q = editor.editor(td.filename.strpath, backup=squawker)
     q.quit(backup=altbackup)
     assert not hasattr(squawker, 'called')
     assert hasattr(altbackup, 'called') and altbackup.called
@@ -642,9 +643,9 @@ def test_substitute(tmpdir, td):
     pytest.debug_func()
 
     # pull the test file content into an editor buffer
-    q = editor.editor(testdata.filename.strpath)
+    q = editor.editor(td.filename.strpath)
     # assert all([_ in testdata.orig for _ in q.buffer])
-    assert testdata.orig == q.buffer
+    assert td.orig == q.buffer
 
     # make a change on every line
     # testdata.filename.write(testdata.ovwr)
@@ -657,14 +658,14 @@ def test_substitute(tmpdir, td):
     # verify that the backup and original files exist
     backup = py.path.local(q.backup_filename)
     assert backup.exists()
-    assert testdata.filename.exists()
+    assert td.filename.exists()
 
     # verify that the backup file contains the right stuff
-    assert written_format(testdata.orig) == backup.read()
+    assert written_format(td.orig) == backup.read()
 
     # verify that the payload file contains the right stuff
-    exp = written_format([_.replace("e", "E") for _ in testdata.orig])
-    assert exp == testdata.filename.read()
+    exp = written_format([_.replace("e", "E") for _ in td.orig])
+    assert exp == td.filename.read()
 
 
 # -----------------------------------------------------------------------------
@@ -675,12 +676,12 @@ def test_trailing_whitespace(tmpdir, td):
     """
     pytest.debug_func()
 
-    testdata.orig[-1] += "     "
+    td.orig[-1] += "     "
     wws = tmpdir.join("with_whitespace")
-    wws.write(written_format(testdata.orig))
+    wws.write(written_format(td.orig))
 
     q = editor.editor(wws.strpath)
-    assert testdata.orig == q.buffer
+    assert td.orig == q.buffer
 
 
 # -----------------------------------------------------------------------------
