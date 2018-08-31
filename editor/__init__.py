@@ -116,6 +116,8 @@ class editor(object):
             """.format(self.filepath))
         else:
             self.buffer = self.contents(self.filepath)
+            if self.backup['when'] == 'load':
+                self.backup['func'](self.backup['ext'])
 
     # -------------------------------------------------------------------------
     def append(self, line):
@@ -214,13 +216,8 @@ class editor(object):
 
         if wtarget is None:
             raise Error("No filepath specified, content will be lost")
-        elif os.path.exists(wtarget):
-            if backup:
-                backup(wtarget)
-            elif hasattr(self, 'backup_func'):
-                self.backup_func(wtarget)
-            else:
-                self.default_backup(wtarget)
+        elif os.path.exists(wtarget) and self.backup['when'] == 'save':
+            self.backup['func'](self.backup['ext'])
 
         nl = newline or self.newline
         out = open(wtarget, 'w')
