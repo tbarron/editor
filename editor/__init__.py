@@ -60,7 +60,7 @@ from datetime import datetime as dt
 import os
 import re
 import shutil
-import time
+import types
 
 
 from editor import version
