@@ -100,8 +100,8 @@ class editor(object):
         self.buffer = content
         self.closed = False
         self.newline = newline
-        if backup:
-            self.backup_func = backup
+        self.backup = {}
+        self.backup_setup(backup)
 
         if self.filepath is None:
             return
@@ -206,6 +206,9 @@ class editor(object):
         self.closed = True
         if not save:
             return
+
+        if backup:
+            self.backup_setup(backup)
 
         wtarget = filepath or self.filepath
 
