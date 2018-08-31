@@ -126,8 +126,33 @@ class editor(object):
         self.buffer.append(line)
 
     # -------------------------------------------------------------------------
+    def backup_setup(self, backup):
         """
+        *backup* may be 'load', 'save', extension string, a function pointer,
+        or a tuple containing a combination of these (except that 'load' and
+        'save' are mutually exclusive).
         """
+        def bs_resolve(val):
+            if val == 'load':
+                self.backup['when'] = val
+            elif val == 'save':
+                pass
+            elif isinstance(val, types.FunctionType):
+                self.backup['func'] = val
+            elif isinstance(val, str):
+                self.backup['ext'] = val
+
+        self.backup['when'] = 'save'
+        self.backup['func'] = self.default_backup
+        self.backup['ext'] = ".%Y.%m%d.%H%M%S"
+        self.backup['filepath'] = self.filepath
+
+        if isinstance(backup, tuple):
+            for item in backup:
+                bs_resolve(item)
+        else:
+            bs_resolve(backup)
+
 
     # -------------------------------------------------------------------------
     def default_backup(self, filepath):
