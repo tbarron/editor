@@ -30,22 +30,12 @@ def test_abandon(tmpdir, td, fx_chdir, K):
         # original content left in 'filename'
     """
     pytest.debug_func()
-
-    # load the test data into an editor object
     q = editor.editor(td.basename)
-
-    # append some data to the end of the editor buffer
-
-    # terminate the editor (should write out the file)
     q.append(K["oops"])
     q.quit(save=False)
-
-    # verify that original file exists but backup file does not
     assert td.filename.exists()
     assert q.backup_filename() is None
     assert len(tmpdir.listdir()) == 1
-
-    # verify that the appended line is not in the original file
     content = td.filename.read()
     assert written_format(td.orig) == content
     assert K["oops"] not in content
@@ -62,25 +52,14 @@ def test_another(tmpdir, td, fx_chdir, K):
         q.quit(filepath='other_filename')
     """
     pytest.debug_func()
-
-    # load the test data into an editor object
     q = editor.editor(td.basename)
-
-    # terminate the editor (should write out the file to a different name)
     other = tmpdir.join(K["altfile"])
     q.sub(K["test"], K["frib"])
     q.quit(filepath=other.strpath)
-
-    # compute the expected edited content
-    edited = [x.replace("test", "fribble") for x in td.orig]
-
-    # verify that both backup and original file exist
     edited = [x.replace(K["test"], K["frib"]) for x in td.orig]
     assert q.backup_filename() is None
     assert td.filename.exists()
     assert other.exists()
-
-    # verify that the new line IS in the original file
     assert written_format(td.orig) == td.filename.read()
     assert written_format(edited) == other.read()
 
@@ -97,25 +76,13 @@ def test_append(tmpdir, td, fx_chdir, K):
         q.quit(save=True)   # save=True is the default
     """
     pytest.debug_func()
-
-    # load the test data into an editor object
     q = editor.editor(td.basename)
-
-    # append some data to the end of the editor buffer
-
-    # terminate the editor (should write out the file)
     q.append(K["new"])
     q.quit()
-
-    # verify that both backup and original file exist
     backup = py.path.local(q.backup_filename())
     assert backup.exists()
     assert td.filename.exists()
-
-    # verify that the new line is not in the backup file
     bdata = backup.read()
-
-    # verify that the new line IS in the original file
     assert K["new"] not in bdata
     exp = written_format(td.orig + [K["new"]])
     assert exp == td.filename.read()
