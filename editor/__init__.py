@@ -6,7 +6,7 @@ Examples:
     Save a backup copy of a file at load time
 
         import editor
-        q = editor.editor('/path/to/file', copy_on_load='.%Y.%m%d.%H%M%S')
+        q = editor.editor('/path/to/file', backup='load')
         # original file copied to /path/to/file.YYYY.mmdd.HHMMSS
         # file is updated and saved
         q.quit(save=True)
@@ -68,8 +68,7 @@ from editor import version
 
 class editor(object):
     # -------------------------------------------------------------------------
-    def __init__(self, filepath=None, content=[], backup=None, newline='\n',
-                 copy_on_load=None):
+    def __init__(self, filepath=None, content=[], backup=None, newline='\n'):
         """
         If *filepath* is None, we're creating a new file. The caller will have
         to specify a filepath when calling quit().
