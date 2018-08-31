@@ -545,4 +545,5 @@ def testdata(tmpdir, justdata):
     testdata.ovwr = justdata.ovwr
     testdata.filename = tmpdir.join("testfile")
     testdata.filename.write(written_format(testdata.orig))
+    testdata.basename = testdata.filename.basename
     return testdata
