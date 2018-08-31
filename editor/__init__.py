@@ -154,16 +154,15 @@ class editor(object):
         else:
             bs_resolve(backup)
 
-
     # -------------------------------------------------------------------------
-    def default_backup(self, filepath):
+    def default_backup(self, ext):
         """
         This default backup routine will copy *filepath* to, for example,
         *filepath*~2015.0112.093715
         """
-        ts = time.strftime(".%Y.%m%d.%H%M%S")
-        self.backup_filename = filepath + ts
-        shutil.copy2(filepath, self.backup_filename)
+        ts = dt.now().strftime(ext)
+        self.backup_filename = self.backup['filepath'] + ts
+        shutil.copy2(self.backup['filepath'], self.backup_filename)
 
     # -------------------------------------------------------------------------
     def contents(self, filepath, newline=None):
