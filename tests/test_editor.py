@@ -43,7 +43,7 @@ def test_abandon(tmpdir, td, fx_chdir):
 
     # verify that original file exists but backup file does not
     assert td.filename.exists()
-    assert not hasattr(q, "backup_filename")
+    assert q.backup_filename() is None
     assert len(tmpdir.listdir()) == 1
 
     # verify that the appended line is not in the original file
@@ -76,7 +76,7 @@ def test_another(tmpdir, td, fx_chdir):
     edited = [x.replace("test", "fribble") for x in td.orig]
 
     # verify that both backup and original file exist
-    assert not hasattr(q, "backup_filename")
+    assert q.backup_filename() is None
     assert td.filename.exists()
     assert other.exists()
 
@@ -108,7 +108,7 @@ def test_append(tmpdir, td, fx_chdir):
     q.quit()
 
     # verify that both backup and original file exist
-    backup = py.path.local(q.backup_filename)
+    backup = py.path.local(q.backup_filename())
     assert backup.exists()
     assert td.filename.exists()
 
@@ -473,7 +473,7 @@ def test_delete(td):
     q = editor.editor(filepath=td.filename.strpath)
     rmd = q.delete(' test')
     q.quit()
-    backup = py.path.local(q.backup_filename)
+    backup = py.path.local(q.backup_filename())
 
     assert q.closed
     assert td.orig[1] in [_.strip() for _ in rmd]
@@ -509,7 +509,7 @@ def test_dos(tmpdir, td):
     q.quit(newline="\r\n")
 
     # verify that both backup and original file exist
-    backup = py.path.local(q.backup_filename)
+    backup = py.path.local(q.backup_filename())
     assert backup.exists()
     assert td.filename.exists()
 
@@ -595,7 +595,7 @@ def test_overwrite_recovery(tmpdir, td):
     q.quit()
 
     # verify that the backup and original files exist
-    backup = py.path.local(q.backup_filename)
+    backup = py.path.local(q.backup_filename())
     assert backup.exists()
     assert td.filename.exists()
 
@@ -657,7 +657,7 @@ def test_substitute(tmpdir, td):
     q.quit()
 
     # verify that the backup and original files exist
-    backup = py.path.local(q.backup_filename)
+    backup = py.path.local(q.backup_filename())
     assert backup.exists()
     assert td.filename.exists()
 
