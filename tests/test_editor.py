@@ -12,8 +12,8 @@ def test_flake8(K):
     """
     Checks output of flake8
     """
-    assert b"" == result
     result = pexpect.run(K["flake_cmd"])
+    assert "" == result.decode()
 
 
 # -----------------------------------------------------------------------------
