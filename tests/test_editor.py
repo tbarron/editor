@@ -727,20 +727,6 @@ def alt_backup(ext):
 
 
 # -----------------------------------------------------------------------------
-@pytest.fixture
-def backup_reset():
-    """
-    Let the test run, then reset the backup routines
-    """
-    yield
-    for bfunc in [altbackup, squawker]:
-        try:
-            del bfunc.called
-        except AttributeError:
-            pass
-
-
-# -----------------------------------------------------------------------------
 def contents(path):
     """
     Return the contents of *path* as a string
@@ -751,19 +737,10 @@ def contents(path):
 
 
 # -----------------------------------------------------------------------------
-@pytest.fixture
-def justdata(tmpdir):
-    """
-    Container of the test data
-    """
-    justdata.orig = ["This is a file containing",
-                     "several lines of test data",
-                     "to start us out on the",
-                     "overwrite test."]
-    justdata.ovwr = ["This is the overwriting data",
-                     "Once the test is done, this",
-                     "should no longer be present."]
-    return justdata
+def glob_assert(globexpr, exp_count):
+    flist = glob.glob(globexpr)
+    assert len(flist) == exp_count
+    return flist
 
 
 # -----------------------------------------------------------------------------
@@ -783,10 +760,37 @@ def written_format(lines, newline="\n"):
 
 
 # -----------------------------------------------------------------------------
-def glob_assert(globexpr, exp_count):
-    flist = glob.glob(globexpr)
-    assert len(flist) == exp_count
-    return flist
+@pytest.fixture
+def backup_reset():
+    """
+    Let the test run, then reset the backup routines
+    """
+    yield
+    for bfunc in [altbackup, squawker]:
+        try:
+            del bfunc.called
+        except AttributeError:
+            pass
+
+
+# -----------------------------------------------------------------------------
+    return rval
+
+
+# -----------------------------------------------------------------------------
+@pytest.fixture
+def justdata(tmpdir):
+    """
+    Container of the test data
+    """
+    justdata.orig = ["This is a file containing",
+                     "several lines of test data",
+                     "to start us out on the",
+                     "overwrite test."]
+    justdata.ovwr = ["This is the overwriting data",
+                     "Once the test is done, this",
+                     "should no longer be present."]
+    return justdata
 
 
 # -----------------------------------------------------------------------------
