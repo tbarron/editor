@@ -20,7 +20,8 @@ def test_flake8():
 def test_abandon(tmpdir, td, fx_chdir):
     """
     Verifies that if an edit is abandoned (i.e., save=False passed to the
-    quit() method), the original content is left in the file
+    quit() method), the original content is left in the file and no backup is
+    created.
 
         import editor
         q = editor.editor('filename')
