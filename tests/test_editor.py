@@ -516,6 +516,26 @@ def written_format(lines, newline="\n"):
 
 # -----------------------------------------------------------------------------
 @pytest.fixture
+def td(tmpdir, justdata):
+    """
+    Adds newlines to the test data at appropriate spots and writes the result
+    to a file in tmpdir
+    """
+    td.orig = justdata.orig
+    td.ovwr = justdata.ovwr
+    td.filename = tmpdir.join("testfile")
+    td.filename.write(written_format(td.orig))
+    td.basename = td.filename.basename
+    td.abm_name = "alt_backup_marker"
+    td.drgx = "\.\d{4}\.\d{4}\.\d{6}"
+    td.ymd_fmt = ".%Y%b%d"
+    td.ymd_rgx = "^\.\d{4}\w{3}\d{2}$"
+    td.dfmt = ".%Y.%m%d.%H%M%S"
+    return td
+
+
+# -----------------------------------------------------------------------------
+@pytest.fixture
 def testdata(tmpdir, justdata):
     """
     Adds newlines to the test data at appropriate spots and writes the result
