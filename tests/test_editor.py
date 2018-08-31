@@ -459,6 +459,15 @@ def altbackup(filepath):
 
 
 # -----------------------------------------------------------------------------
+def alt_backup(ext):
+    """
+    Alternate backup function
+    """
+    filename = "alt_backup_marker{}".format(ext)
+    open(filename, 'w').close()
+
+
+# -----------------------------------------------------------------------------
 @pytest.fixture
 def backup_reset():
     """
@@ -512,6 +521,20 @@ def written_format(lines, newline="\n"):
     Concatenate *lines* with *newline* separators as if written in a file
     """
     return newline.join(lines) + newline
+
+
+# -----------------------------------------------------------------------------
+def glob_assert(globexpr, exp_count):
+    flist = glob.glob(globexpr)
+    assert len(flist) == exp_count
+    return flist
+
+
+# -----------------------------------------------------------------------------
+@pytest.fixture
+def fx_chdir(tmpdir):
+    with tbx.chdir(tmpdir.strpath):
+        yield
 
 
 # -----------------------------------------------------------------------------
