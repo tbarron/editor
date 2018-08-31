@@ -4,6 +4,8 @@ import glob
 import pexpect
 import py
 import pytest
+import re
+import tbx
 
 
 # -----------------------------------------------------------------------------
