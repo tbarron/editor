@@ -65,7 +65,6 @@ def test_another(tmpdir, td, fx_chdir, K):
 
 
 # -----------------------------------------------------------------------------
-def test_append(tmpdir, td, fx_chdir):
 def test_append(tmpdir, td, fx_chdir, K):
     """
     Verifies that <editor>.append(data) appends *data* to the end of the file
