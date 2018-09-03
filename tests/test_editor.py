@@ -480,8 +480,6 @@ def test_dos(tmpdir, td):
 
 
 # -----------------------------------------------------------------------------
-    """
-# -----------------------------------------------------------------------------
 def test_newfile(tmpdir):
     """
     Verifies that we can build the contents of a file in an editor object by
