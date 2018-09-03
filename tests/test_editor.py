@@ -6,9 +6,11 @@ import pytest
 import re
 import tbx
 
+from editor.text import catalog as K
+
 
 # -----------------------------------------------------------------------------
-def test_flake8(K):
+def test_flake8():
     """
     Checks output of flake8 on payload and test code
     """
@@ -17,7 +19,7 @@ def test_flake8(K):
 
 
 # -----------------------------------------------------------------------------
-def test_abandon(tmpdir, td, fx_chdir, K):
+def test_abandon(tmpdir, td, fx_chdir):
     """
     Verifies that if an edit is abandoned (i.e., save=False passed to the
     quit() method), the original content is left in the file and no backup is
@@ -42,7 +44,7 @@ def test_abandon(tmpdir, td, fx_chdir, K):
 
 
 # -----------------------------------------------------------------------------
-def test_another(tmpdir, td, fx_chdir, K):
+def test_another(tmpdir, td, fx_chdir):
     """
     Verifies that <editor>.quit() with filepath argument saves the edited
     content to the alternate file path.
@@ -65,7 +67,7 @@ def test_another(tmpdir, td, fx_chdir, K):
 
 
 # -----------------------------------------------------------------------------
-def test_append(tmpdir, td, fx_chdir, K):
+def test_append(tmpdir, td, fx_chdir):
     """
     Verifies that <editor>.append(data) appends *data* to the end of the file
 
@@ -138,7 +140,7 @@ def test_backup_default(tmpdir, td, fx_chdir):
 
 
 # -----------------------------------------------------------------------------
-def test_backup_default_strftime(tmpdir, td, fx_chdir, K):
+def test_backup_default_strftime(tmpdir, td, fx_chdir):
     """
     Verify that backup=('.%Y%b%d', 'load') does the right thing
     """
@@ -152,7 +154,7 @@ def test_backup_default_strftime(tmpdir, td, fx_chdir, K):
 
 
 # -----------------------------------------------------------------------------
-def test_backup_default_strftime_q(tmpdir, td, fx_chdir, K):
+def test_backup_default_strftime_q(tmpdir, td, fx_chdir):
     """
     Verify that backup=('.%Y.%m%d.%H%M%S') behaves as expected
     """
@@ -167,7 +169,7 @@ def test_backup_default_strftime_q(tmpdir, td, fx_chdir, K):
 
 
 # -----------------------------------------------------------------------------
-def test_backup_extension(tmpdir, td, fx_chdir, K):
+def test_backup_extension(tmpdir, td, fx_chdir):
     """
     Verify that backup='extension' works. (Can't use 'save' or 'load' as a file
     name extension, but '.save' or '.load' should work.)
@@ -208,7 +210,7 @@ def test_backup_extension_q(tmpdir, td, fx_chdir):
 
 
 # -----------------------------------------------------------------------------
-def test_backup_func_ext(tmpdir, td, fx_chdir, K):
+def test_backup_func_ext(tmpdir, td, fx_chdir):
     """
     Verify that backup=('ext', function) calls function('ext') at save time.
 
@@ -223,7 +225,7 @@ def test_backup_func_ext(tmpdir, td, fx_chdir, K):
 
 
 # -----------------------------------------------------------------------------
-def test_backup_func_ymd(tmpdir, td, fx_chdir, K):
+def test_backup_func_ymd(tmpdir, td, fx_chdir):
     """
     Verify that backup=(function, '%Y%b%d') calls function('%Y%b%d') at save
     time.
@@ -239,7 +241,7 @@ def test_backup_func_ymd(tmpdir, td, fx_chdir, K):
 
 
 # -----------------------------------------------------------------------------
-def test_backup_func_ymd_load(tmpdir, td, fx_chdir, K):
+def test_backup_func_ymd_load(tmpdir, td, fx_chdir):
     """
     Verify that backup=(function, '%b%y%H', 'load') calls function('%b%y%H') at
     load time.
@@ -255,7 +257,7 @@ def test_backup_func_ymd_load(tmpdir, td, fx_chdir, K):
 
 
 # -----------------------------------------------------------------------------
-def test_backup_func_ymd_save(tmpdir, td, fx_chdir, K):
+def test_backup_func_ymd_save(tmpdir, td, fx_chdir):
     """
     Verify that backup=(function, '%b%y%H', 'save') calls function('%b%y%H') at
     save time.
@@ -271,7 +273,7 @@ def test_backup_func_ymd_save(tmpdir, td, fx_chdir, K):
 
 
 # -----------------------------------------------------------------------------
-def test_backup_load(tmpdir, td, fx_chdir, K):
+def test_backup_load(tmpdir, td, fx_chdir):
     """
     Verify that backup='load' makes the backup happen at load time.
 
@@ -289,7 +291,7 @@ def test_backup_load(tmpdir, td, fx_chdir, K):
 
 
 # -----------------------------------------------------------------------------
-def test_backup_load_ext(tmpdir, td, fx_chdir, K):
+def test_backup_load_ext(tmpdir, td, fx_chdir):
     """
     Verify that backup=('load', '.ext') makes the backup happen at load time
     and uses the specified extension.
@@ -306,7 +308,7 @@ def test_backup_load_ext(tmpdir, td, fx_chdir, K):
 
 
 # -----------------------------------------------------------------------------
-def test_backup_load_func(tmpdir, td, fx_chdir, K):
+def test_backup_load_func(tmpdir, td, fx_chdir):
     """
     Verify that backup=(function, 'load') runs function at load time.
 
@@ -321,7 +323,7 @@ def test_backup_load_func(tmpdir, td, fx_chdir, K):
 
 
 # -----------------------------------------------------------------------------
-def test_backup_save(tmpdir, td, fx_chdir, K):
+def test_backup_save(tmpdir, td, fx_chdir):
     """
     Verify that backup='save' delays the backup time to when .quit() is called.
 
@@ -339,7 +341,7 @@ def test_backup_save(tmpdir, td, fx_chdir, K):
 
 
 # -----------------------------------------------------------------------------
-def test_backup_save_ext(tmpdir, td, fx_chdir, K):
+def test_backup_save_ext(tmpdir, td, fx_chdir):
     """
     Verify that backup=('.ext', 'save') makes the backup at save time with .ext
     as the extension on the backup file.
@@ -357,7 +359,7 @@ def test_backup_save_ext(tmpdir, td, fx_chdir, K):
 
 
 # -----------------------------------------------------------------------------
-def test_backup_save_func(tmpdir, td, fx_chdir, K):
+def test_backup_save_func(tmpdir, td, fx_chdir):
     """
     Verify that backup=('save', function) runs function at save time.
 
@@ -733,30 +735,6 @@ def backup_reset():
             del bfunc.called
         except AttributeError:
             pass
-
-
-# -----------------------------------------------------------------------------
-@pytest.fixture
-def K():
-    """
-    Constants for tests
-    """
-    rval = {
-        'altfile': "another_filename",
-        'dfid': ".fiddle",
-        'flake_cmd': "flake8 conftest.py editor tests",
-        'frib': "fribble",
-        'froo': ".frooble",
-        'load': "load",
-        'new': "This line is not in the original test data",
-        'oops': "Oops! I should not have added this line",
-        'save': "save",
-        'test': "test",
-        'wump': ".wumpus",
-        'ymdf': ".%Y%b%d",
-        }
-
-    return rval
 
 
 # -----------------------------------------------------------------------------
