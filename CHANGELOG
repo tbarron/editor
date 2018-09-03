@@ -4,6 +4,7 @@
  - Drop copy_on_load functionality and tests
  - Document issues with consolidated backup behavior
  - Implement consolidated backup functionality
+ - Put constants in text.py and eliminate fixture constants
  - Test cleanup
 
 1.1.2  2018.0827  05:31:58  (trailing whitespace, TWS)
