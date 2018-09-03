@@ -465,25 +465,12 @@ def test_dos(tmpdir, td):
     bytearray based on a utf8 string.
     """
     pytest.debug_func()
-
-    # load the test data into an editor object
     q = editor.editor(td.filename.strpath)
-
-    # append some data to the end of the editor buffer
-
-    # terminate the editor (should write out the file)
-
-    # verify that both backup and original file exist
     q.append(K["new"])
     q.quit(newline=K["crlf"])
     backup = py.path.local(q.backup_filename())
     assert backup.exists()
     assert td.filename.exists()
-
-    # verify that the new line is not in the backup file
-
-    # verify that the new line IS in the original file
-    # exp = testdata.orig.replace("\n", "\r\n") + appline + "\r\n"
     assert written_format(K["orig_l"]) in backup.read()
     assert K["new"] not in backup.read()
     exp = bytearray(written_format(K["orig_l"] + [K["new"]],
@@ -538,38 +525,15 @@ def test_overwrite_fail(tmpdir, td):
 # -----------------------------------------------------------------------------
 def test_overwrite_recovery(tmpdir, td):
     """
-    Verifies that the original file winds up with a backup name
-    (YYYY.mmdd.HHMMSS added to the name) while the contents of the object
-    buffer goes into the original file name.
-
-        import editor
-        q = editor.editor('/path/to/file')
-        # file is changed or overwritten by another process
-        q.quit()
-        # quit() writes old version to /path/to/file.YYYY.mmdd.HHMMSS
     """
     pytest.debug_func()
-
-    # pull the test file content into an editor buffer
     q = editor.editor(td.filename.strpath)
-    assert td.orig == q.buffer
-
-    # overwrite the test file outside the editor
-
-    # terminate the editor (saving the original data and backing up the
-    # overwrite data)
     assert K["orig_l"] == q.buffer
     td.filename.write(written_format(K["ovwr_l"]))
     q.quit()
-
-    # verify that the backup and original files exist
     backup = py.path.local(q.backup_filename())
     assert backup.exists()
     assert td.filename.exists()
-
-    # verify that the backup file contains the right stuff
-
-    # verify that the payload file contains the right stuff
     assert written_format(K["ovwr_l"]) == backup.read()
     assert written_format(K["orig_l"]) == td.filename.read()
 
@@ -610,28 +574,13 @@ def test_substitute(tmpdir, td):
         # quit() writes old version to /path/to/file.YYYY.mmdd.HHMMSS
     """
     pytest.debug_func()
-
-    # pull the test file content into an editor buffer
     q = editor.editor(td.filename.strpath)
-    # assert all([_ in testdata.orig for _ in q.buffer])
-
-    # make a change on every line
-    # testdata.filename.write(testdata.ovwr)
-
-    # terminate the editor (saving the original data and backing up the
-    # overwrite data)
     assert K["orig_l"] == q.buffer
     q.sub(K["lowe"], K["uppE"])
     q.quit()
-
-    # verify that the backup and original files exist
     backup = py.path.local(q.backup_filename())
     assert backup.exists()
     assert td.filename.exists()
-
-    # verify that the backup file contains the right stuff
-
-    # verify that the payload file contains the right stuff
     assert written_format(K["orig_l"]) == backup.read()
     exp = written_format([_.replace(K["lowe"], K["uppE"])
                           for _ in K["orig_l"]])
