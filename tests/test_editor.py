@@ -480,10 +480,12 @@ def test_dos(tmpdir, td):
 
 
 # -----------------------------------------------------------------------------
-def test_newfile(tmpdir, justdata):
     """
-    Verifies that we can build the contents of a file in an editor object a
-    line at a time.
+# -----------------------------------------------------------------------------
+def test_newfile(tmpdir):
+    """
+    Verifies that we can build the contents of a file in an editor object by
+    appending a line at a time.
 
         import editor
         q = editor.editor(['line 1', 'line 2'])
@@ -525,6 +527,9 @@ def test_overwrite_fail(tmpdir, td):
 # -----------------------------------------------------------------------------
 def test_overwrite_recovery(tmpdir, td):
     """
+    What this test verifies is that whatever is in the original file at save
+    time gets copied to the backup file, even if it isn't the original content.
+    Whatever is in the editor buffer gets written out to the original file.
     """
     pytest.debug_func()
     q = editor.editor(td.filename.strpath)
