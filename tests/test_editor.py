@@ -374,7 +374,7 @@ def test_backup_save_func(tmpdir, td, fx_chdir):
 
 
 # -----------------------------------------------------------------------------
-def test_backup_save_func_q(tmpdir, td, fx_chdir, K):
+def test_backup_save_func_q(tmpdir, td, fx_chdir):
     """
     Verify that backup=('save', function) passed to .quit() runs function at
     save time.
