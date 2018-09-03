@@ -399,11 +399,11 @@ def test_backup_function(tmpdir, td, backup_reset):
         q.quit()   # verify that function runs
     """
     pytest.debug_func()
-    assert not hasattr(squawker, 'called')
+    assert not hasattr(squawker, K['called'])
     q = editor.editor(td.filename.strpath, backup=squawker)
-    assert not hasattr(squawker, 'called')
+    assert not hasattr(squawker, K['called'])
     q.quit()
-    assert hasattr(squawker, 'called') and squawker.called
+    assert hasattr(squawker, K['called']) and squawker.called
 
 
 # -----------------------------------------------------------------------------
@@ -421,7 +421,7 @@ def test_closed(td):
     q.quit()
     with pytest.raises(editor.Error) as err:
         q.quit()
-    assert "This file is already closed" in str(err)
+    assert K["closed"] in str(err)
 
 
 # -----------------------------------------------------------------------------
@@ -435,7 +435,7 @@ def test_delete(td):
     """
     pytest.debug_func()
     q = editor.editor(filepath=td.filename.strpath)
-    rmd = q.delete(' test')
+    rmd = q.delete(K["stst"])
     q.quit()
     backup = py.path.local(q.backup_filename())
 
@@ -470,9 +470,9 @@ def test_dos(tmpdir, td):
     q.append(appline)
 
     # terminate the editor (should write out the file)
-    q.quit(newline="\r\n")
 
     # verify that both backup and original file exist
+    q.quit(newline=K["crlf"])
     backup = py.path.local(q.backup_filename())
     assert backup.exists()
     assert td.filename.exists()
@@ -503,9 +503,9 @@ def test_newfile(tmpdir, justdata):
         q.quit(filepath='newfile')
     """
     pytest.debug_func()
-    init = "First line"
-    last = "Last line"
-    stem = tmpdir.join("newfile")
+    init = K["frst"]
+    last = K["last"]
+    stem = tmpdir.join(K["nwfl"])
     assert len(tmpdir.listdir()) == 0
     q = editor.editor(filepath=stem.strpath, content=[init])
     for _ in K["orig_l"]:
@@ -528,8 +528,8 @@ def test_overwrite_fail(tmpdir, td):
         q = editor.editor(filepath=td.filename.strpath,  # noqa: F841
                           content=['line 1', 'line 2'])
     assert td.filename.strpath in str(err)
-    assert "To overwrite it" in str(err)
-    assert "Error" in repr(err)
+    assert K["ovwr"] in str(err)
+    assert K["err"] in repr(err)
 
 
 # -----------------------------------------------------------------------------
@@ -589,8 +589,8 @@ def test_qbackup(tmpdir, td, backup_reset):
         pass
     q = editor.editor(td.filename.strpath, backup=squawker)
     q.quit(backup=altbackup)
-    assert not hasattr(squawker, 'called')
-    assert hasattr(altbackup, 'called') and altbackup.called
+    assert not hasattr(squawker, K['called'])
+    assert hasattr(altbackup, K['called']) and altbackup.called
 
 
 # -----------------------------------------------------------------------------
@@ -614,11 +614,11 @@ def test_substitute(tmpdir, td):
 
     # make a change on every line
     # testdata.filename.write(testdata.ovwr)
-    q.sub("e", "E")
 
     # terminate the editor (saving the original data and backing up the
     # overwrite data)
     assert K["orig_l"] == q.buffer
+    q.sub(K["lowe"], K["uppE"])
     q.quit()
 
     # verify that the backup and original files exist
@@ -629,8 +629,9 @@ def test_substitute(tmpdir, td):
     # verify that the backup file contains the right stuff
 
     # verify that the payload file contains the right stuff
-    exp = written_format([_.replace("e", "E") for _ in td.orig])
     assert written_format(K["orig_l"]) == backup.read()
+    exp = written_format([_.replace(K["lowe"], K["uppE"])
+                          for _ in K["orig_l"]])
     assert exp == td.filename.read()
 
 
@@ -642,9 +643,9 @@ def test_trailing_whitespace(tmpdir, td):
     """
     pytest.debug_func()
 
-    wws = tmpdir.join("with_whitespace")
     wws.write(written_format(td.orig))
     K["orig_l"][-1] += K["whsp"]
+    wws = tmpdir.join(K["with"])
 
     q = editor.editor(wws.strpath)
     assert K["orig_l"] == q.buffer
@@ -668,10 +669,10 @@ def test_wtarget_none():
         q.quit()        # expect Error('No filepath specified...')
     """
     pytest.debug_func()
-    q = editor.editor(content=["one", "two"])
+    q = editor.editor(content=[K["one"], K["two"]])
     with pytest.raises(editor.Error) as err:
         q.quit()
-    assert "No filepath specified" in str(err)
+    assert K["miss"] in str(err)
 
 
 # -----------------------------------------------------------------------------
