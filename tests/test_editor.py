@@ -740,22 +740,6 @@ def backup_reset():
 
 # -----------------------------------------------------------------------------
 @pytest.fixture
-def justdata(tmpdir):
-    """
-    Container of the test data
-    """
-    justdata.orig = ["This is a file containing",
-                     "several lines of test data",
-                     "to start us out on the",
-                     "overwrite test."]
-    justdata.ovwr = ["This is the overwriting data",
-                     "Once the test is done, this",
-                     "should no longer be present."]
-    return justdata
-
-
-# -----------------------------------------------------------------------------
-@pytest.fixture
 def fx_chdir(tmpdir):
     with tbx.chdir(tmpdir.strpath):
         yield
