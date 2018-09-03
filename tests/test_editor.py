@@ -302,7 +302,7 @@ def test_backup_load_ext(tmpdir, td, fx_chdir):
     q = editor.editor(td.basename, backup=(K["load"], K["froo"]))
     fl = glob_assert("*", 2)
     assert td.basename in fl
-    assert "{}{}".format(td.basename, K["froo"]) in fl
+    assert td.basename + K["froo"] in fl
     q.quit()
     fl = glob_assert("*", 2)
 
@@ -317,7 +317,7 @@ def test_backup_load_func(tmpdir, td, fx_chdir):
     pytest.debug_func()
     q = editor.editor(td.basename, backup=(alt_backup, K["load"]))
     fl = glob_assert("*", 2)
-    assert "{}{}".format(td.abm_name, td.dfmt) in fl
+    assert K["abm"] + K["dfmt"] in fl
     q.quit()
     fl = glob_assert("*", 2)
 
@@ -355,7 +355,7 @@ def test_backup_save_ext(tmpdir, td, fx_chdir):
     assert td.basename in fl
     q.quit()
     fl = glob_assert("*", 2)
-    assert "{}{}".format(td.basename, ext) in fl
+    assert td.basename + ext in fl
 
 
 # -----------------------------------------------------------------------------
@@ -687,7 +687,7 @@ def alt_backup(ext):
     """
     Alternate backup function
     """
-    filename = "alt_backup_marker{}".format(ext)
+    filename = K["abm"] + ext
     open(filename, 'w').close()
 
 
