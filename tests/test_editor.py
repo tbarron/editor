@@ -459,6 +459,10 @@ def test_dos(tmpdir, td):
         q = editor.editor('filename')
         q.append('This is a new line')
         q.quit(newline='\r\n')
+
+    We have to .read_binary() the file to see the \r. Calling .read()
+    apparently converts \r\n to just \n. We put the expected value in a
+    bytearray based on a utf8 string.
     """
     pytest.debug_func()
 
