@@ -39,7 +39,7 @@ def test_abandon(tmpdir, td, fx_chdir):
     assert q.backup_filename() is None
     assert len(tmpdir.listdir()) == 1
     content = td.filename.read()
-    assert written_format(td.orig) == content
+    assert written_format(K["orig_l"]) == content
     assert K["oops"] not in content
 
 
@@ -58,11 +58,11 @@ def test_another(tmpdir, td, fx_chdir):
     other = tmpdir.join(K["altfile"])
     q.sub(K["test"], K["frib"])
     q.quit(filepath=other.strpath)
-    edited = [x.replace(K["test"], K["frib"]) for x in td.orig]
+    edited = [x.replace(K["test"], K["frib"]) for x in K["orig_l"]]
     assert q.backup_filename() is None
     assert td.filename.exists()
     assert other.exists()
-    assert written_format(td.orig) == td.filename.read()
+    assert written_format(K["orig_l"]) == td.filename.read()
     assert written_format(edited) == other.read()
 
 
@@ -85,7 +85,7 @@ def test_append(tmpdir, td, fx_chdir):
     assert td.filename.exists()
     bdata = backup.read()
     assert K["new"] not in bdata
-    exp = written_format(td.orig + [K["new"]])
+    exp = written_format(K["orig_l"] + [K["new"]])
     assert exp == td.filename.read()
 
 
@@ -101,7 +101,7 @@ def test_backup_altfunc(tmpdir, td, fx_chdir):
     q = editor.editor(td.basename, backup=alt_backup)
     q.quit()
     fl = glob_assert("*", 2)
-    assert td.abm_name + td.dfmt in fl
+    assert K["abm"] + K["dfmt"] in fl
 
 
 # -----------------------------------------------------------------------------
@@ -117,7 +117,7 @@ def test_backup_altfunc_q(tmpdir, td, fx_chdir):
     fl = glob_assert("*", 1)
     q.quit(backup=alt_backup)
     fl = glob_assert("*", 2)
-    assert td.abm_name + td.dfmt in fl
+    assert K["abm"] + K["dfmt"] in fl
 
 
 # -----------------------------------------------------------------------------
@@ -136,7 +136,7 @@ def test_backup_default(tmpdir, td, fx_chdir):
     assert td.basename in fl
     [other] = [x for x in fl if x != td.basename]
     dstr = other.replace(td.basename, '')
-    assert re.match(td.drgx, dstr)
+    assert re.match(K["drgx"], dstr)
 
 
 # -----------------------------------------------------------------------------
@@ -149,7 +149,7 @@ def test_backup_default_strftime(tmpdir, td, fx_chdir):
     fl = glob_assert("*", 2)
     [other] = [x for x in fl if x != td.basename]
     left = other.replace(td.basename, '')
-    assert re.match(td.ymd_rgx, left)
+    assert re.match(K["ymd_rgx"], left)
     q.quit()
 
 
@@ -159,13 +159,13 @@ def test_backup_default_strftime_q(tmpdir, td, fx_chdir):
     Verify that backup=('.%Y.%m%d.%H%M%S') behaves as expected
     """
     pytest.debug_func()
-    q = editor.editor(td.basename, backup=(td.dfmt, K["save"]))
+    q = editor.editor(td.basename, backup=(K["dfmt"], K["save"]))
     fl = glob_assert("*", 1)
     q.quit()
     fl = glob_assert("*", 2)
     [other] = [x for x in fl if x != td.basename]
     left = other.replace(td.basename, '')
-    assert re.match(td.drgx, left)
+    assert re.match(K["drgx"], left)
 
 
 # -----------------------------------------------------------------------------
@@ -221,7 +221,7 @@ def test_backup_func_ext(tmpdir, td, fx_chdir):
     fl = glob_assert("*", 1)
     q.quit()
     fl = glob_assert("*", 2)
-    assert td.abm_name + K["wump"] in fl
+    assert K["abm"] + K["wump"] in fl
 
 
 # -----------------------------------------------------------------------------
@@ -237,7 +237,7 @@ def test_backup_func_ymd(tmpdir, td, fx_chdir):
     fl = glob_assert("*", 1)
     q.quit()
     fl = glob_assert("*", 2)
-    assert td.abm_name + K["ymdf"] in fl
+    assert K["abm"] + K["ymdf"] in fl
 
 
 # -----------------------------------------------------------------------------
@@ -251,7 +251,7 @@ def test_backup_func_ymd_load(tmpdir, td, fx_chdir):
     pytest.debug_func()
     q = editor.editor(td.basename, backup=(alt_backup, K["ymdf"], K["load"]))
     fl = glob_assert("*", 2)
-    assert td.abm_name + K["ymdf"] in fl
+    assert K["abm"] + K["ymdf"] in fl
     q.quit()
     fl = glob_assert("*", 2)
 
@@ -269,7 +269,7 @@ def test_backup_func_ymd_save(tmpdir, td, fx_chdir):
     fl = glob_assert("*", 1)
     q.quit()
     fl = glob_assert("*", 2)
-    assert td.abm_name + td.ymd_fmt in fl
+    assert K["abm"] + K["ymdf"] in fl
 
 
 # -----------------------------------------------------------------------------
@@ -284,7 +284,7 @@ def test_backup_load(tmpdir, td, fx_chdir):
     fl = glob_assert("*", 2)
     [other] = [x for x in fl if x != td.basename]
     left = other.replace(td.basename, '')
-    assert re.match(td.drgx, left)
+    assert re.match(K["drgx"], left)
     q.quit()
     fl = glob_assert("*", 2)
     assert td.basename in fl
@@ -337,7 +337,7 @@ def test_backup_save(tmpdir, td, fx_chdir):
     assert td.basename in fl
     [other] = [x for x in fl if x != td.basename]
     left = other.replace(td.basename, '')
-    assert re.match(td.drgx, left)
+    assert re.match(K["drgx"], left)
 
 
 # -----------------------------------------------------------------------------
@@ -370,7 +370,7 @@ def test_backup_save_func(tmpdir, td, fx_chdir):
     fl = glob_assert("*", 1)
     q.quit()
     fl = glob_assert("*", 2)
-    assert "alt_backup_marker{}".format(td.dfmt) in fl
+    assert K["abm"] + K["dfmt"] in fl
 
 
 # -----------------------------------------------------------------------------
@@ -386,7 +386,7 @@ def test_backup_save_func_q(tmpdir, td, fx_chdir):
     fl = glob_assert("*", 1)
     q.quit(backup=(K["save"], alt_backup))
     fl = glob_assert("*", 2)
-    assert "alt_backup_marker{}".format(td.dfmt) in fl
+    assert K["abm"] + K["dfmt"] in fl
 
 
 # -----------------------------------------------------------------------------
@@ -440,13 +440,13 @@ def test_delete(td):
     backup = py.path.local(q.backup_filename())
 
     assert q.closed
-    assert td.orig[1] in [_.strip() for _ in rmd]
-    assert td.orig[3] in rmd
+    assert K["orig_l"][1] in [_.strip() for _ in rmd]
+    assert K["orig_l"][3] in rmd
     assert len(rmd) == 2
     assert backup.exists()
     assert td.filename.exists()
-    assert td.orig[1] not in td.filename.read()
-    assert td.orig[3] not in td.filename.read()
+    assert K["orig_l"][1] not in td.filename.read()
+    assert K["orig_l"][3] not in td.filename.read()
 
 
 # -----------------------------------------------------------------------------
@@ -483,8 +483,8 @@ def test_dos(tmpdir, td):
 
     # verify that the new line IS in the original file
     # exp = testdata.orig.replace("\n", "\r\n") + appline + "\r\n"
-    exp = bytearray(written_format(td.orig + [appline], newline="\r\n"),
-                    'utf8')
+    exp = bytearray(written_format(K["orig_l"] + [K["new"]],
+                                   newline=K["crlf"]), 'utf8')
     actual = td.filename.read_binary()
     assert exp == actual
 
@@ -508,11 +508,11 @@ def test_newfile(tmpdir, justdata):
     stem = tmpdir.join("newfile")
     assert len(tmpdir.listdir()) == 0
     q = editor.editor(filepath=stem.strpath, content=[init])
-    for _ in justdata.orig:
+    for _ in K["orig_l"]:
         q.append(_)
     q.append(last)
     q.quit(filepath=stem.strpath)
-    exp = written_format([init] + justdata.orig + [last])
+    exp = written_format([init] + K["orig_l"] + [last])
     assert exp == stem.read()
 
 
@@ -552,10 +552,11 @@ def test_overwrite_recovery(tmpdir, td):
     assert td.orig == q.buffer
 
     # overwrite the test file outside the editor
-    td.filename.write(written_format(td.ovwr))
 
     # terminate the editor (saving the original data and backing up the
     # overwrite data)
+    assert K["orig_l"] == q.buffer
+    td.filename.write(written_format(K["ovwr_l"]))
     q.quit()
 
     # verify that the backup and original files exist
@@ -564,10 +565,10 @@ def test_overwrite_recovery(tmpdir, td):
     assert td.filename.exists()
 
     # verify that the backup file contains the right stuff
-    assert written_format(td.ovwr) == backup.read()
 
     # verify that the payload file contains the right stuff
-    assert written_format(td.orig) == td.filename.read()
+    assert written_format(K["ovwr_l"]) == backup.read()
+    assert written_format(K["orig_l"]) == td.filename.read()
 
 
 # -----------------------------------------------------------------------------
@@ -610,7 +611,6 @@ def test_substitute(tmpdir, td):
     # pull the test file content into an editor buffer
     q = editor.editor(td.filename.strpath)
     # assert all([_ in testdata.orig for _ in q.buffer])
-    assert td.orig == q.buffer
 
     # make a change on every line
     # testdata.filename.write(testdata.ovwr)
@@ -618,6 +618,7 @@ def test_substitute(tmpdir, td):
 
     # terminate the editor (saving the original data and backing up the
     # overwrite data)
+    assert K["orig_l"] == q.buffer
     q.quit()
 
     # verify that the backup and original files exist
@@ -626,10 +627,10 @@ def test_substitute(tmpdir, td):
     assert td.filename.exists()
 
     # verify that the backup file contains the right stuff
-    assert written_format(td.orig) == backup.read()
 
     # verify that the payload file contains the right stuff
     exp = written_format([_.replace("e", "E") for _ in td.orig])
+    assert written_format(K["orig_l"]) == backup.read()
     assert exp == td.filename.read()
 
 
@@ -641,12 +642,12 @@ def test_trailing_whitespace(tmpdir, td):
     """
     pytest.debug_func()
 
-    td.orig[-1] += "     "
     wws = tmpdir.join("with_whitespace")
     wws.write(written_format(td.orig))
+    K["orig_l"][-1] += K["whsp"]
 
     q = editor.editor(wws.strpath)
-    assert td.orig == q.buffer
+    assert K["orig_l"] == q.buffer
 
 
 # -----------------------------------------------------------------------------
@@ -762,19 +763,12 @@ def fx_chdir(tmpdir):
 
 # -----------------------------------------------------------------------------
 @pytest.fixture
-def td(tmpdir, justdata):
+def td(tmpdir):
     """
     Adds newlines to the test data at appropriate spots and writes the result
     to a file in tmpdir
     """
-    td.orig = justdata.orig
-    td.ovwr = justdata.ovwr
     td.filename = tmpdir.join("testfile")
-    td.filename.write(written_format(td.orig))
+    td.filename.write(written_format(K["orig_l"]))
     td.basename = td.filename.basename
-    td.abm_name = "alt_backup_marker"
-    td.drgx = "\.\d{4}\.\d{4}\.\d{6}"
-    td.ymd_fmt = ".%Y%b%d"
-    td.ymd_rgx = "^\.\d{4}\w{3}\d{2}$"
-    td.dfmt = ".%Y.%m%d.%H%M%S"
     return td
