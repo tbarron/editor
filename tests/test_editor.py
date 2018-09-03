@@ -466,23 +466,22 @@ def test_dos(tmpdir, td):
     q = editor.editor(td.filename.strpath)
 
     # append some data to the end of the editor buffer
-    appline = "This line is not in the original test data"
-    q.append(appline)
 
     # terminate the editor (should write out the file)
 
     # verify that both backup and original file exist
+    q.append(K["new"])
     q.quit(newline=K["crlf"])
     backup = py.path.local(q.backup_filename())
     assert backup.exists()
     assert td.filename.exists()
 
     # verify that the new line is not in the backup file
-    assert written_format(td.orig) in backup.read()
-    assert appline not in backup.read()
 
     # verify that the new line IS in the original file
     # exp = testdata.orig.replace("\n", "\r\n") + appline + "\r\n"
+    assert written_format(K["orig_l"]) in backup.read()
+    assert K["new"] not in backup.read()
     exp = bytearray(written_format(K["orig_l"] + [K["new"]],
                                    newline=K["crlf"]), 'utf8')
     actual = td.filename.read_binary()
@@ -643,9 +642,9 @@ def test_trailing_whitespace(tmpdir, td):
     """
     pytest.debug_func()
 
-    wws.write(written_format(td.orig))
     K["orig_l"][-1] += K["whsp"]
     wws = tmpdir.join(K["with"])
+    wws.write(written_format(K["orig_l"]))
 
     q = editor.editor(wws.strpath)
     assert K["orig_l"] == q.buffer
