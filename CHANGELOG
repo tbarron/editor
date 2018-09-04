@@ -1,4 +1,10 @@
-2.0.0  YYYY.mmdd  HH:MM:SS  (backup consolidation, BC)
+2.1.0  yyyy.mmdd  hh:mm:ss  (add insert functionality)
+
+ - Add insert test
+ - Add functions __len__() and insert() to editor to satisfy the test
+ - Update test for more incremental checking of results
+
+2.0.0  2018.0903  18:05:37  (backup consolidation, BC)
 
  - Added CHANGELOG
  - Drop copy_on_load functionality and tests
