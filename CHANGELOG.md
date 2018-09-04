@@ -4,27 +4,38 @@ Notable changes for this project. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-Each release header has the following format: 
+Each release header has the following format:
 
-    [VERSION] / release date / title, tag
+    [VERSION] / release date / title, tag (branch)
 
 The title describes the overall update made with this release. The tag is a
 short marker that begins each of the related commit messages.
 
-## [Unreleased] / yyyy-mm-dd / conform to Keep a Changelog, CL
+## [Unreleased] / yyyy-mm-dd / substitute limit, SL (sublim)
 ### Added
-- New file CHANGELOG.md with content copied from plain text CHANGELOG.
-- New sections in README.md: "Release Cycle" and "CHANGELOG.md".
+ - Test test_substitute_limit() to verify the functionality.
 
 ### Changed
-- Updated content of CHANGELOG.md to conform to "Keep a Changelog" (see
-  link above).
+ - Function editor.sub(), to satisfy test_substitute_limit().
 
-## [2.1.0] / 2018-09-04 / add insert functionality, INS
+## [2.1.1] / 2018-09-04 / conform to Keep a Changelog, CL (changelog)
+### Added
+ - New file CHANGELOG.md with content copied from plain text CHANGELOG.
+ - New sections in README.md: "Release Cycle" and "CHANGELOG.md".
+
+### Changed
+ - Updated content of CHANGELOG.md to conform to "Keep a Changelog" (see
+   link above) albeit with a tweak to the format of release header lines
+   (described in the introductory material at the top of this file).
+
+### Removed
+ - Plain text version of CHANGELOG.
+
+## [2.1.0] / 2018-09-04 / add insert functionality, INS (insert)
 ### Added
  - Insert test with incremental checking of results
  - Functions __len__() and insert() to editor to satisfy the test
- 
+
 ## [2.0.0] / 2018-09-03 / backup consolidation, BC
 ### Added
  - Plain text CHANGELOG
@@ -42,7 +53,7 @@ short marker that begins each of the related commit messages.
 ### Added
  - Verify complete test coverage
  - Add test to catch trailing whitespace on last line
- 
+
 ### Changed
  - Fix the trailing whitespace bug
 
