@@ -480,20 +480,26 @@ def test_dos(tmpdir, td):
 
 
 # -----------------------------------------------------------------------------
-def test_insert(tmpdir):
+def test_insert(tmpdir, td):
     """
     Verify that we can insert new lines at specific spots in the editor buffer
     """
     pytest.debug_func()
     q = editor.editor(td.filename.strpath)
-    q.insert("This goes before the first line")
-    q.insert("This goes after the last line", len(q))
-    q.insert("This goes in the middle", 3)
-    q.quit()
     edited = K["orig_l"]
+    q.insert("This goes before the first line")
     edited.insert(0, "This goes before the first line")
+    assert q.buffer == edited
+
+    q.insert("This goes after the last line", len(q))
     edited.insert(len(edited), "This goes after the last line")
+    assert q.buffer == edited
+
+    q.insert("This goes in the middle", 3)
     edited.insert(3, "This goes in the middle")
+    assert q.buffer == edited
+
+    q.quit()
     assert written_format(edited) == td.filename.read()
 
 
