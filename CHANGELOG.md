@@ -43,14 +43,14 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
  - Alphabetize and document tests
 
-## [1.1.0] 2018-08-26 (copy on load, COL)
+## [1.1.0] / 2018-08-26 / copy on load, COL
 ### Added
  - Define and implement copy_on_load behavior
 
 ### Changed
  - Documentation improvements
 
-## [1.0.0] 2017-04-19 (continuous integration, CI)
+## [1.0.0] / 2017-04-19 / continuous integration, CI
 ### Added
  - Work on README.md
  - Set up py.test, Makefile (for clean target), test coverage, flake8 code
