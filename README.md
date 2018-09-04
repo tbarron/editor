@@ -113,3 +113,30 @@ save, both triggers will fire and backup the file twice.
         import editor
         q = editor.editor('unixfile')
         q.quit(save=True, filepath='dosfile', newline='\r\n')
+
+
+### CHANGELOG.md
+
+CHANGELOG.md is maintained according to the principles outlined at
+https://keepachangelog.com/en/0.3.0/
+
+### Release Cycle
+
+  * Create a branch off master with an appropriate name.
+
+  * Make changes in the branch to fix the bug, add the new functionality,
+    or whatever, updating the "Unreleased" section of CHANGELOG.md.
+
+  * Once all changes are complete, update the version file to show the new
+    version.
+
+  * Update CHANGELOG.md with the new version and release date (but no
+    time).
+
+  * Commit the new verison and CHANGELOG.md as the last commit on the work
+    branch.
+
+  * Make an annotated tag on the last commit. Its description can contain
+    the CHANGELOG.md entry.
+
+  * Check out master and merge the completed work branch.

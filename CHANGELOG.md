@@ -4,7 +4,14 @@ Notable changes for this project. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] yyyy-mm-dd (conform to Keep a Changelog, CL)
+Each release header has the following format: 
+
+    [VERSION] / release date / title, tag
+
+The title describes the overall update made with this release. The tag is a
+short marker that begins each of the related commit messages.
+
+## [Unreleased] / yyyy-mm-dd / conform to Keep a Changelog, CL
 ### Added
 - New file CHANGELOG.md with content copied from plain text CHANGELOG.
 - New sections in README.md: "Release Cycle" and "CHANGELOG.md".
@@ -13,12 +20,12 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Updated content of CHANGELOG.md to conform to "Keep a Changelog" (see
   link above).
 
-## [2.1.0] 2018-09-04 (add insert functionality, INS)
+## [2.1.0] / 2018-09-04 / add insert functionality, INS
 ### Added
  - Insert test with incremental checking of results
  - Functions __len__() and insert() to editor to satisfy the test
  
-## [2.0.0] 2018-09-03 (backup consolidation, BC)
+## [2.0.0] / 2018-09-03 / backup consolidation, BC
 ### Added
  - Plain text CHANGELOG
  - Documentation about issues with consolidated backup behavior
@@ -31,7 +38,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Removed
  - Drop copy_on_load functionality and tests
 
-## [1.1.2] 2018-08-27 (trailing whitespace, TWS)
+## [1.1.2] / 2018-08-27 / trailing whitespace, TWS)
 ### Added
  - Verify complete test coverage
  - Add test to catch trailing whitespace on last line
@@ -39,7 +46,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
  - Fix the trailing whitespace bug
 
-## [1.1.1] 2018-08-26 (test cleanup, CT)
+## [1.1.1] / 2018-08-26 / test cleanup, CT
 ### Changed
  - Alphabetize and document tests
 
