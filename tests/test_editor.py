@@ -480,6 +480,24 @@ def test_dos(tmpdir, td):
 
 
 # -----------------------------------------------------------------------------
+def test_insert(tmpdir):
+    """
+    Verify that we can insert new lines at specific spots in the editor buffer
+    """
+    pytest.debug_func()
+    q = editor.editor(td.filename.strpath)
+    q.insert("This goes before the first line")
+    q.insert("This goes after the last line", len(q))
+    q.insert("This goes in the middle", 3)
+    q.quit()
+    edited = K["orig_l"]
+    edited.insert(0, "This goes before the first line")
+    edited.insert(len(edited), "This goes after the last line")
+    edited.insert(3, "This goes in the middle")
+    assert written_format(edited) == td.filename.read()
+
+
+# -----------------------------------------------------------------------------
 def test_newfile(tmpdir):
     """
     Verifies that we can build the contents of a file in an editor object by
