@@ -120,6 +120,13 @@ class editor(object):
                 self.backup['func'](self.backup['ext'])
 
     # -------------------------------------------------------------------------
+    def __len__(self):
+        """
+        Return the length of the buffer
+        """
+        return len(self.buffer)
+
+    # -------------------------------------------------------------------------
     def append(self, line):
         """
         Add *line* to the end of the file
@@ -194,6 +201,13 @@ class editor(object):
         rval = [l for l in self.buffer if re.search(rgx, l)]
         self.buffer = newbuf
         return rval
+
+    # -------------------------------------------------------------------------
+    def insert(self, line, where=0):
+        """
+        Insert *line* after line *where*
+        """
+        self.buffer.insert(where, line)
 
     # -------------------------------------------------------------------------
     def quit(self, save=True, filepath=None, backup=None, newline=None):
