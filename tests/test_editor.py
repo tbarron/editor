@@ -21,15 +21,9 @@ def test_flake8():
 # -----------------------------------------------------------------------------
 def test_abandon(tmpdir, td, fx_chdir):
     """
-    Verifies that if an edit is abandoned (i.e., save=False passed to the
-    quit() method), the original content is left in the file and no backup is
-    created.
-
-        import editor
-        q = editor.editor('filename')
-        q.sub('good stuff', 'bad stuff')   # oops!
-        q.quit(save=False)
-        # original content left in 'filename'
+    Verifies that if an abandoned edit (i.e., save=False passed to the quit()
+    method) leaves the original content is left in the source file without
+    creating a backup.
     """
     pytest.debug_func()
     q = editor.editor(td.basename)
@@ -48,10 +42,6 @@ def test_another(tmpdir, td, fx_chdir):
     """
     Verifies that <editor>.quit() with filepath argument saves the edited
     content to the alternate file path.
-
-        import editor
-        q = editor.editor('filename')
-        q.quit(filepath='other_filename')
     """
     pytest.debug_func()
     q = editor.editor(td.basename)
@@ -70,11 +60,6 @@ def test_another(tmpdir, td, fx_chdir):
 def test_append(tmpdir, td, fx_chdir):
     """
     Verifies that <editor>.append(data) appends *data* to the end of the file
-
-        import editor
-        q = editor.editor('filename')
-        q.append('This is a new line')
-        q.quit(save=True)   # save=True is the default
     """
     pytest.debug_func()
     q = editor.editor(td.basename)
@@ -94,8 +79,6 @@ def test_backup_altfunc(tmpdir, td, fx_chdir):
     """
     Verify that backup=alt_func causes alt_func to be run for backup (at save
     time).
-
-    [backup=alt_backup_function]
     """
     pytest.debug_func()
     q = editor.editor(td.basename, backup=alt_backup)
@@ -109,8 +92,6 @@ def test_backup_altfunc_q(tmpdir, td, fx_chdir):
     """
     Verify that backup=alt_func passed to .quit() causes alt_func to be run for
     backup (at save time).
-
-    [backup=alt_backup_function]
     """
     pytest.debug_func()
     q = editor.editor(td.basename)
@@ -125,8 +106,6 @@ def test_backup_default(tmpdir, td, fx_chdir):
     """
     Verify that passing no values for backup yields the default backup
     behavior.
-
-    [backup unspecified (defaults)]
     """
     pytest.debug_func()
     q = editor.editor(td.basename)
@@ -173,8 +152,6 @@ def test_backup_extension(tmpdir, td, fx_chdir):
     """
     Verify that backup='extension' works. (Can't use 'save' or 'load' as a file
     name extension, but '.save' or '.load' should work.)
-
-    [backup='ext']
     """
     pytest.debug_func()
     q = editor.editor(td.basename, backup=K["dfid"])
@@ -193,8 +170,6 @@ def test_backup_extension_q(tmpdir, td, fx_chdir):
     Verify that backup='extension' works when passed to .quit(). (Can't use
     'save' or 'load' as a file name extension, but '.save' or '.load' should
     work.)
-
-    [backup='ext']
     """
     pytest.debug_func()
     ext = '.fiddle'
@@ -213,8 +188,6 @@ def test_backup_extension_q(tmpdir, td, fx_chdir):
 def test_backup_func_ext(tmpdir, td, fx_chdir):
     """
     Verify that backup=('ext', function) calls function('ext') at save time.
-
-    [backup=('ext', function)]
     """
     pytest.debug_func()
     q = editor.editor(td.basename, backup=(K["wump"], alt_backup))
@@ -229,8 +202,6 @@ def test_backup_func_ymd(tmpdir, td, fx_chdir):
     """
     Verify that backup=(function, '%Y%b%d') calls function('%Y%b%d') at save
     time.
-
-    [backup=(function, '%Y%b%d')]
     """
     pytest.debug_func()
     q = editor.editor(td.basename, backup=(alt_backup, K["ymdf"]))
@@ -245,8 +216,6 @@ def test_backup_func_ymd_load(tmpdir, td, fx_chdir):
     """
     Verify that backup=(function, '%b%y%H', 'load') calls function('%b%y%H') at
     load time.
-
-    [backup=(function, '%b%y%H', 'load')]
     """
     pytest.debug_func()
     q = editor.editor(td.basename, backup=(alt_backup, K["ymdf"], K["load"]))
@@ -261,8 +230,6 @@ def test_backup_func_ymd_save(tmpdir, td, fx_chdir):
     """
     Verify that backup=(function, '%b%y%H', 'save') calls function('%b%y%H') at
     save time.
-
-    [backup=(function, '%b%y%H', 'save')]
     """
     pytest.debug_func()
     q = editor.editor(td.basename, backup=(alt_backup, K["ymdf"], K["save"]))
@@ -276,8 +243,6 @@ def test_backup_func_ymd_save(tmpdir, td, fx_chdir):
 def test_backup_load(tmpdir, td, fx_chdir):
     """
     Verify that backup='load' makes the backup happen at load time.
-
-    [backup='load']
     """
     pytest.debug_func()
     q = editor.editor(td.basename, backup=K["load"])
@@ -295,8 +260,6 @@ def test_backup_load_ext(tmpdir, td, fx_chdir):
     """
     Verify that backup=('load', '.ext') makes the backup happen at load time
     and uses the specified extension.
-
-    [backup=('load', 'ext')]
     """
     pytest.debug_func()
     q = editor.editor(td.basename, backup=(K["load"], K["froo"]))
@@ -311,8 +274,6 @@ def test_backup_load_ext(tmpdir, td, fx_chdir):
 def test_backup_load_func(tmpdir, td, fx_chdir):
     """
     Verify that backup=(function, 'load') runs function at load time.
-
-    [backup=(function, 'load')]
     """
     pytest.debug_func()
     q = editor.editor(td.basename, backup=(alt_backup, K["load"]))
@@ -326,8 +287,6 @@ def test_backup_load_func(tmpdir, td, fx_chdir):
 def test_backup_save(tmpdir, td, fx_chdir):
     """
     Verify that backup='save' delays the backup time to when .quit() is called.
-
-    [backup='save']
     """
     pytest.debug_func()
     q = editor.editor(td.basename, backup=K["save"])
@@ -345,8 +304,6 @@ def test_backup_save_ext(tmpdir, td, fx_chdir):
     """
     Verify that backup=('.ext', 'save') makes the backup at save time with .ext
     as the extension on the backup file.
-
-    [backup=('.ext', 'save')]
     """
     pytest.debug_func()
     ext = ".backup"
@@ -362,8 +319,6 @@ def test_backup_save_ext(tmpdir, td, fx_chdir):
 def test_backup_save_func(tmpdir, td, fx_chdir):
     """
     Verify that backup=('save', function) runs function at save time.
-
-    [backup=('save', function)]
     """
     pytest.debug_func()
     q = editor.editor(td.basename, backup=(K["save"], alt_backup))
@@ -378,8 +333,6 @@ def test_backup_save_func_q(tmpdir, td, fx_chdir):
     """
     Verify that backup=('save', function) passed to .quit() runs function at
     save time.
-
-    [backup=('save', function)]
     """
     pytest.debug_func()
     q = editor.editor(td.basename)
@@ -394,9 +347,6 @@ def test_backup_function(tmpdir, td, backup_reset):
     """
     Verifies that the backup function gets called and that we can specify an
     alternate backup function.
-
-        q = editor.editor(..., backup=function, ...)
-        q.quit()   # verify that function runs
     """
     pytest.debug_func()
     assert not hasattr(squawker, K['called'])
@@ -410,11 +360,7 @@ def test_backup_function(tmpdir, td, backup_reset):
 def test_closed(td):
     """
     Verifies that a closed editor object will throw an error if we try to do
-    something with it.
-
-        q = editor.editor()
-        q.quit()
-        q.quit()      # expect editor.Error('already closed')
+    something with it that depends on an open editor object.
     """
     pytest.debug_func()
     q = editor.editor(filepath=td.filename.strpath)
@@ -428,10 +374,6 @@ def test_closed(td):
 def test_delete(td):
     """
     Verifies that <editor>.delete() removes matching lines
-
-        q = editor.editor()
-        q.delete(<expr>)
-        q.quit()      # expect matching lines to have disappeared
     """
     pytest.debug_func()
     q = editor.editor(filepath=td.filename.strpath)
@@ -452,13 +394,8 @@ def test_delete(td):
 # -----------------------------------------------------------------------------
 def test_dos(tmpdir, td):
     """
-    Verifies that specifying newline='\r\n' in the .quit() call, puts CR-LF as
-    line separators in the output file.
-
-        import editor
-        q = editor.editor('filename')
-        q.append('This is a new line')
-        q.quit(newline='\r\n')
+    Verifies that specifying newline='\r\n' in the .quit() call uses CR-LF to
+    separate lines in the output file.
 
     We have to .read_binary() the file to see the \r. Calling .read()
     apparently converts \r\n to just \n. We put the expected value in a
@@ -508,13 +445,6 @@ def test_newfile(tmpdir):
     """
     Verifies that we can build the contents of a file in an editor object by
     appending a line at a time.
-
-        import editor
-        q = editor.editor(['line 1', 'line 2'])
-        q.append('This is a line')
-        q.append('Another line')
-        ...
-        q.quit(filepath='newfile')
     """
     pytest.debug_func()
     init = K["frst"]
@@ -534,8 +464,6 @@ def test_newfile(tmpdir):
 def test_overwrite_fail(tmpdir, td):
     """
     Verifies that specifying contents for an existing file throws an exception
-
-        q = editor.editor('/path/to/file', content=['foo', 'bar'])
     """
     pytest.debug_func()
     with pytest.raises(editor.Error) as err:
@@ -570,11 +498,6 @@ def test_qbackup(tmpdir, td, backup_reset):
     """
     Verifies that an alternate backup routine can be called with argument to
     quit() method
-
-        q = editor.editor('/path/to/file', backup=foobar)
-        q.quit(backup=other)
-        assert not foobar.called
-        assert other.called
     """
     pytest.debug_func()
     try:
@@ -593,12 +516,6 @@ def test_substitute(tmpdir, td):
     Verifies that with a change to every line in the editor buffer, .quit()
     writes that edited text to the original file and the original text to the
     backup file.
-
-        import editor
-        q = editor.editor('/path/to/file')
-        # Make a change to every line in the editor object
-        q.quit()
-        # quit() writes old version to /path/to/file.YYYY.mmdd.HHMMSS
     """
     pytest.debug_func()
     q = editor.editor(td.filename.strpath)
@@ -643,9 +560,6 @@ def test_wtarget_none():
     """
     Verifies that attempting to quit an editor object with no file name
     established throws an exception
-
-        q = editor.editor(content=['one', 'two'])
-        q.quit()        # expect Error('No filepath specified...')
     """
     pytest.debug_func()
     q = editor.editor(content=[K["one"], K["two"]])
