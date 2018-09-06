@@ -417,6 +417,20 @@ def test_dos(tmpdir, td):
 
 
 # -----------------------------------------------------------------------------
+def test_init_content():
+    """
+    Verify that the constructor will take a list of strings or a single string
+    for the content argument.
+    """
+    pytest.debug_func()
+    a = editor.editor(content=K["orig_l"])
+    assert a.buffer == K["orig_l"]
+    strinp = "".join([_ + "\n" for _ in K["orig_l"]])
+    b = editor.editor(content=strinp)
+    assert b.buffer == K["orig_l"]
+
+
+# -----------------------------------------------------------------------------
 def test_insert(tmpdir, td):
     """
     Verify that we can insert new lines at specific spots in the editor buffer
