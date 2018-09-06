@@ -532,6 +532,21 @@ def test_substitute(tmpdir, td):
 
 
 # -----------------------------------------------------------------------------
+def test_substitute_limit(tmpdir, td):
+    """
+    Verify that we can pass a number to sub as the third argument that will
+    limit the number of substitutions
+    """
+    pytest.debug_func()
+    q = editor.editor(td.filename.strpath)
+    q.sub(K["lowa"], K["uppA"], 1)
+    q.quit()
+    exp = written_format([_.replace(K["lowa"], K["uppA"], 1)
+                          for _ in K["orig_l"]])
+    assert exp == td.filename.read()
+
+
+# -----------------------------------------------------------------------------
 def test_trailing_whitespace(tmpdir, td):
     """
     Detects the bug where trailing whitespace on the last line of the file is
