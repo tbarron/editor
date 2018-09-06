@@ -567,7 +567,8 @@ def test_version():
     """
     Checks the version
     """
-    assert editor.editor.version() != ""
+    result = editor.editor.version()
+    assert re.match("\d+\.\d+\.\d+", result)
 
 
 # -----------------------------------------------------------------------------
