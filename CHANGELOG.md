@@ -11,12 +11,35 @@ Each release header has the following format:
 The title describes the overall update made with this release. The tag is a
 short marker that begins each of the related commit messages.
 
-## [Unreleased] / yyyy-mm-dd / substitute limit, SL (sublim)
+## [Unreleased] / yyyy-mm-dd / ...
+
+
+## [2.2.0] / 2018-09-06 / substitute limit, SL (sublim)
 ### Added
  - Test test_substitute_limit() to verify the functionality.
+ - Argument count on method editor.sub()
+ - Added entries in constant dictionary:
+     - 'after'
+     - 'before'
+     - 'bkup'
+     - 'lowa'
+     - 'middle'
+     - 'uppA'
+ - Function comments for glob_assert() and fixture fx_chdir()
 
 ### Changed
- - Function editor.sub(), to satisfy test_substitute_limit().
+ - Updated function editor.sub() to validate argument count and then pass
+   it along to re.sub().
+ - In test_insert(), make sure edited is a *copy* of K["orig_l"] rather
+   than a pointer to it. We don't want to change the value of text
+   dictionary entries.
+ - Function comment improvements.
+ - Replace literal strings with values from the constants dictionary K.
+ - Improved test_version().
+
+### Removed
+ -  Removed pseudo-code and tags from function comments in tests
+
 
 ## [2.1.1] / 2018-09-04 / conform to Keep a Changelog, CL (changelog)
 ### Added
@@ -30,6 +53,7 @@ short marker that begins each of the related commit messages.
 
 ### Removed
  - Plain text version of CHANGELOG.
+
 
 ## [2.1.0] / 2018-09-04 / add insert functionality, INS (insert)
 ### Added
