@@ -60,6 +60,8 @@ from datetime import datetime as dt
 import os
 import re
 import shutil
+import subprocess
+import tempfile
 import types
 
 
@@ -207,6 +209,23 @@ class editor(object):
         return rval
 
     # -------------------------------------------------------------------------
+    def edit(self):
+        """
+        Edit the file in the user's default command line editor
+        """
+        _, tmp = tempfile.mkstemp()
+        with open(tmp, 'w') as f:
+            f.write("".join([_ + self.newline for _ in self.buffer]))
+        cledit = os.getenv('EDITOR') or 'vi'
+        p = subprocess.Popen([cledit, tmp])
+        p.wait()
+        buffer = editor.contents(tmp)
+        if not buffer:
+            return
+        else:
+            self.buffer = buffer
+
+    # -------------------------------------------------------------------------
     def insert(self, line, where=0):
         """
         Insert *line* after line *where*
@@ -243,6 +262,7 @@ class editor(object):
 
         if wtarget is None:
             raise Error("No filepath specified, content will be lost")
+            self.closed = False
         elif os.path.exists(wtarget) and self.backup['when'] == 'save':
             self.backup['func'](self.backup['ext'])
 
