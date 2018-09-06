@@ -306,7 +306,7 @@ def test_backup_save_ext(tmpdir, td, fx_chdir):
     as the extension on the backup file.
     """
     pytest.debug_func()
-    ext = ".backup"
+    ext = K["bkup"]
     q = editor.editor(td.basename, backup=(K["save"], ext))
     fl = glob_assert("*", 1)
     assert td.basename in fl
@@ -424,16 +424,16 @@ def test_insert(tmpdir, td):
     pytest.debug_func()
     q = editor.editor(td.filename.strpath)
     edited = K["orig_l"]
-    q.insert("This goes before the first line")
-    edited.insert(0, "This goes before the first line")
+    q.insert(K["before"])
+    edited.insert(0, K["before"])
     assert q.buffer == edited
 
-    q.insert("This goes after the last line", len(q))
-    edited.insert(len(edited), "This goes after the last line")
+    q.insert(K["after"], len(q))
+    edited.insert(len(edited), K["after"])
     assert q.buffer == edited
 
-    q.insert("This goes in the middle", 3)
-    edited.insert(3, "This goes in the middle")
+    q.insert(K["middle"], 3)
+    edited.insert(3, K["middle"])
     assert q.buffer == edited
 
     q.quit()
@@ -468,7 +468,7 @@ def test_overwrite_fail(tmpdir, td):
     pytest.debug_func()
     with pytest.raises(editor.Error) as err:
         q = editor.editor(filepath=td.filename.strpath,  # noqa: F841
-                          content=['line 1', 'line 2'])
+                          content=[K["before"], K["middle"], K["after"]])
     assert td.filename.strpath in str(err)
     assert K["ovwr"] in str(err)
     assert K["err"] in repr(err)
