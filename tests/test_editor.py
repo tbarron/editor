@@ -613,6 +613,10 @@ def contents(path):
 
 # -----------------------------------------------------------------------------
 def glob_assert(globexpr, exp_count):
+    """
+    Given a glob expression in *globexpr*, assert that it matches *exp_count*
+    entries
+    """
     flist = glob.glob(globexpr)
     assert len(flist) == exp_count
     return flist
@@ -651,6 +655,9 @@ def backup_reset():
 # -----------------------------------------------------------------------------
 @pytest.fixture
 def fx_chdir(tmpdir):
+    """
+    Run the test after cd'ing to tmpdir.strpath
+    """
     with tbx.chdir(tmpdir.strpath):
         yield
 
