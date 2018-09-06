@@ -10,3 +10,6 @@ venv
 .#*
 *~
 *.pyc
+build
+editor.egg-info
+dist
