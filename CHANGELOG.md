@@ -24,6 +24,7 @@ short marker that begins each of the related commit messages.
 ### Removed
  - Remove unnecessary help text from python file
 
+
 ## [2.2.0] / 2018-09-06 / substitute limit, SL (sublim)
 ### Added
  - Test test_substitute_limit() to verify the functionality.
@@ -70,6 +71,7 @@ short marker that begins each of the related commit messages.
  - Insert test with incremental checking of results
  - Functions __len__() and insert() to editor to satisfy the test
 
+
 ## [2.0.0] / 2018-09-03 / backup consolidation, BC
 ### Added
  - Plain text CHANGELOG
@@ -83,6 +85,7 @@ short marker that begins each of the related commit messages.
 ### Removed
  - Drop copy_on_load functionality and tests
 
+
 ## [1.1.2] / 2018-08-27 / trailing whitespace, TWS)
 ### Added
  - Verify complete test coverage
@@ -91,9 +94,11 @@ short marker that begins each of the related commit messages.
 ### Changed
  - Fix the trailing whitespace bug
 
+
 ## [1.1.1] / 2018-08-26 / test cleanup, CT
 ### Changed
  - Alphabetize and document tests
+
 
 ## [1.1.0] / 2018-08-26 / copy on load, COL
 ### Added
@@ -101,6 +106,7 @@ short marker that begins each of the related commit messages.
 
 ### Changed
  - Documentation improvements
+
 
 ## [1.0.0] / 2017-04-19 / continuous integration, CI
 ### Added
