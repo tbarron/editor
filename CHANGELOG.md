@@ -11,8 +11,18 @@ Each release header has the following format:
 The title describes the overall update made with this release. The tag is a
 short marker that begins each of the related commit messages.
 
-## [Unreleased] / yyyy-mm-dd / ...
+## [2.3.0] / 2018-09-06 / resolve fiatjaf's pull request, FJ (fiatjaf)
+### Added
+ - Add build files to .gitignore
+ - Add .edit() method for editing files in the default text editor
 
+### Changed
+ - Make editor.contents() into a static method
+ - Accept a string for constructor argument content as well as a list of
+   strings
+
+### Removed
+ - Remove unnecessary help text from python file
 
 ## [2.2.0] / 2018-09-06 / substitute limit, SL (sublim)
 ### Added
