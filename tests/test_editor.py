@@ -357,6 +357,21 @@ def test_backup_function(tmpdir, td, backup_reset):
 
 
 # -----------------------------------------------------------------------------
+def test_contents(tmpdir, fx_chdir):
+    """
+    Verify that .contents() behaves as expected. It is a static method and can
+    therefore be called either through the class or through an instance.
+    """
+    testfile = tmpdir.join("testfile")
+    testfile.write(written_format(K["ovwr_l"]))
+    result = editor.editor.contents(testfile.basename)
+    assert result == K["ovwr_l"]
+    q = editor.editor(testfile.basename)
+    result = q.contents(testfile.basename)
+    assert result == K["ovwr_l"]
+
+
+# -----------------------------------------------------------------------------
 def test_closed(td):
     """
     Verifies that a closed editor object will throw an error if we try to do
