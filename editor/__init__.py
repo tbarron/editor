@@ -97,9 +97,12 @@ class editor(object):
         on the constructor or on quit().
         """
         self.filepath = filepath
-        self.buffer = content
-        self.closed = False
         self.newline = newline
+        if isinstance(content, str):
+            self.buffer = content.rstrip(self.newline).split(self.newline)
+        else:
+            self.buffer = content
+        self.closed = False
         self.backup = {}
         self.backup_setup(backup)
 
