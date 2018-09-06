@@ -423,7 +423,7 @@ def test_insert(tmpdir, td):
     """
     pytest.debug_func()
     q = editor.editor(td.filename.strpath)
-    edited = K["orig_l"]
+    edited = K["orig_l"][:]
     q.insert(K["before"])
     edited.insert(0, K["before"])
     assert q.buffer == edited
