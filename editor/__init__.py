@@ -184,8 +184,8 @@ class editor(object):
         self._backup_filename = self.backup['filepath'] + ts
         shutil.copy2(self.backup['filepath'], self._backup_filename)
 
-    # -------------------------------------------------------------------------
-    def contents(self, filepath, newline=None):
+    @staticmethod
+    def contents(filepath):
         """
         Read a file and return its contents as a list. \n and \r are removed
         from the end of each line.
