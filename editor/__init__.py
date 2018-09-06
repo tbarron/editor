@@ -175,15 +175,6 @@ class editor(object):
             bs_resolve(backup)
 
     # -------------------------------------------------------------------------
-    def default_backup(self, ext):
-        """
-        This default backup routine will copy *filepath* to, for example,
-        *filepath*~2015.0112.093715
-        """
-        ts = dt.now().strftime(ext)
-        self._backup_filename = self.backup['filepath'] + ts
-        shutil.copy2(self.backup['filepath'], self._backup_filename)
-
     @staticmethod
     def contents(filepath):
         """
@@ -194,6 +185,16 @@ class editor(object):
         rval = [x.rstrip("\r\n") for x in f.readlines()]
         f.close()
         return rval
+
+    # -------------------------------------------------------------------------
+    def default_backup(self, ext):
+        """
+        This default backup routine will copy *filepath* to, for example,
+        *filepath*~2015.0112.093715
+        """
+        ts = dt.now().strftime(ext)
+        self._backup_filename = self.backup['filepath'] + ts
+        shutil.copy2(self.backup['filepath'], self._backup_filename)
 
     # -------------------------------------------------------------------------
     def delete(self, rgx):
