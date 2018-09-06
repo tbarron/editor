@@ -248,11 +248,12 @@ class editor(object):
         out.close()
 
     # -------------------------------------------------------------------------
-    def sub(self, rgx, repl):
+    def sub(self, rgx, repl, count=0):
         """
         Replace matches of *rgx* with *repl* on each line in the file
         """
-        newbuf = [re.sub(rgx, repl, line) for line in self.buffer]
+        count = max(count, 0)
+        newbuf = [re.sub(rgx, repl, line, count) for line in self.buffer]
         self.buffer = newbuf
 
     # -------------------------------------------------------------------------
