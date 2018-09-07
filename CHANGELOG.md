@@ -6,7 +6,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 Each release header has the following format:
 
-    [VERSION] / release date / title, tag (branch)
+    [VERSION] / release date / title (branch, tag)
 
 The title describes the overall update made with this release. The tag is a
 short marker that begins each of the related commit messages.
@@ -16,9 +16,11 @@ short marker that begins each of the related commit messages.
  - Use 'x' rather than '\_' as variable name on line 163 of \_\_init\_\_.py
    to address Travis failure: "editor/\_\_init\_\_.py:163:51: F812 list
    comprehension redefines '_' from line 161"
+ - Adjusted the release header format in this file to put branch name and
+   commit message tag together in parens after the title. Before, it was
+   "title, tag (branch)".
 
-
-## [2.3.0] / 2018-09-06 / resolve fiatjaf's pull request, FJ (fiatjaf)
+## [2.3.0] / 2018-09-06 / resolve fiatjaf's pull request (fiatjaf, FJ)
 ### Added
  - Add build files to .gitignore
  - Add .edit() method for editing files in the default text editor
@@ -32,7 +34,7 @@ short marker that begins each of the related commit messages.
  - Remove unnecessary help text from python file
 
 
-## [2.2.0] / 2018-09-06 / substitute limit, SL (sublim)
+## [2.2.0] / 2018-09-06 / substitute limit (sublim, SL)
 ### Added
  - Test test_substitute_limit() to verify the functionality.
  - Argument count on method editor.sub()
@@ -59,7 +61,7 @@ short marker that begins each of the related commit messages.
  -  Removed pseudo-code and tags from function comments in tests
 
 
-## [2.1.1] / 2018-09-04 / conform to Keep a Changelog, CL (changelog)
+## [2.1.1] / 2018-09-04 / conform to Keep a Changelog (changelog, CL)
 ### Added
  - New file CHANGELOG.md with content copied from plain text CHANGELOG.
  - New sections in README.md: "Release Cycle" and "CHANGELOG.md".
@@ -73,13 +75,13 @@ short marker that begins each of the related commit messages.
  - Plain text version of CHANGELOG.
 
 
-## [2.1.0] / 2018-09-04 / add insert functionality, INS (insert)
+## [2.1.0] / 2018-09-04 / add insert functionality (insert, INS)
 ### Added
  - Insert test with incremental checking of results
  - Functions \_\_len\_\_() and insert() to editor to satisfy the test
 
 
-## [2.0.0] / 2018-09-03 / backup consolidation, BC
+## [2.0.0] / 2018-09-03 / backup consolidation (backup, BC)
 ### Added
  - Plain text CHANGELOG
  - Documentation about issues with consolidated backup behavior
@@ -93,7 +95,7 @@ short marker that begins each of the related commit messages.
  - Drop copy_on_load functionality and tests
 
 
-## [1.1.2] / 2018-08-27 / trailing whitespace, TWS)
+## [1.1.2] / 2018-08-27 / trailing whitespace (tws, TWS)
 ### Added
  - Verify complete test coverage
  - Add test to catch trailing whitespace on last line
@@ -102,12 +104,12 @@ short marker that begins each of the related commit messages.
  - Fix the trailing whitespace bug
 
 
-## [1.1.1] / 2018-08-26 / test cleanup, CT
+## [1.1.1] / 2018-08-26 / test cleanup (cleanup, CT)
 ### Changed
  - Alphabetize and document tests
 
 
-## [1.1.0] / 2018-08-26 / copy on load, COL
+## [1.1.0] / 2018-08-26 / copy on load (copy_on_load, COL)
 ### Added
  - Define and implement copy_on_load behavior
 
