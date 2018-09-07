@@ -76,7 +76,7 @@ short marker that begins each of the related commit messages.
 ## [2.1.0] / 2018-09-04 / add insert functionality, INS (insert)
 ### Added
  - Insert test with incremental checking of results
- - Functions __len__() and insert() to editor to satisfy the test
+ - Functions \_\_len\_\_() and insert() to editor to satisfy the test
 
 
 ## [2.0.0] / 2018-09-03 / backup consolidation, BC
