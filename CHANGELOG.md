@@ -11,6 +11,13 @@ Each release header has the following format:
 The title describes the overall update made with this release. The tag is a
 short marker that begins each of the related commit messages.
 
+## [2.3.1] / 2018-09-07 / fix build fail on Travis for python 2.x (twofix, TF)
+### Changed
+ - Use 'x' rather than '_' as variable name on line 163 of __init__.py to
+   address Travis failure: "editor/__init__.py:163:51: F812 list
+   comprehension redefines '_' from line 161"
+
+
 ## [2.3.0] / 2018-09-06 / resolve fiatjaf's pull request, FJ (fiatjaf)
 ### Added
  - Add build files to .gitignore
