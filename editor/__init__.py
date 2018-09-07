@@ -160,7 +160,7 @@ class editor(object):
         """
         _, tmp = tempfile.mkstemp()
         with open(tmp, 'w') as f:
-            f.write("".join([_ + self.newline for _ in self.buffer]))
+            f.write("".join([x + self.newline for x in self.buffer]))
         cledit = os.getenv('EDITOR') or 'vi'
         p = subprocess.Popen([cledit, tmp])
         p.wait()
