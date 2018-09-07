@@ -13,8 +13,8 @@ short marker that begins each of the related commit messages.
 
 ## [2.3.1] / 2018-09-07 / fix build fail on Travis for python 2.x (twofix, TF)
 ### Changed
- - Use 'x' rather than '\_' as variable name on line 163 of \_\_init\_\_.py to
-   address Travis failure: "editor/__init__.py:163:51: F812 list
+ - Use 'x' rather than '\_' as variable name on line 163 of \_\_init\_\_.py
+   to address Travis failure: "editor/\_\_init\_\_.py:163:51: F812 list
    comprehension redefines '_' from line 161"
 
 
